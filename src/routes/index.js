@@ -1,5 +1,5 @@
 import express from "express";
-import userRoutes from "./authRoutes.js";
+import authRoutes from "./authRoutes.js";
 import productRoutes from "./productRoutes.js";
 
 const router = express.Router();
@@ -14,7 +14,7 @@ router.get("/health", (req, res) => {
 });
 
 // API routes
-router.use("/users", userRoutes);
+router.use("/auth", authRoutes);
 router.use("/products", productRoutes);
 
 export default router;
