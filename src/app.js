@@ -24,7 +24,10 @@ app.use(mongoSanitize());
 app.use(helmet());
 
 // CORS
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5174'],
+  credentials: true
+}));
 
 // Request logging
 if (config.isDevelopment) {
