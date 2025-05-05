@@ -3,15 +3,15 @@ import { body } from 'express-validator';
 import { 
   registerUser,
   loginUser,
+  refreshToken,
   getUserProfile,
   updateUserProfile
-} from '../controllers/userController.js';
+} from '../controllers/authController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { validate } from '../middleware/validationMiddleware.js';
 
 const router = express.Router();
 
-// Register user
 router.post(
   '/',
   [
@@ -25,7 +25,6 @@ router.post(
   registerUser
 );
 
-// Login user
 router.post(
   '/login',
   [
@@ -36,7 +35,15 @@ router.post(
   loginUser
 );
 
-// User profile routes
+router.post(
+  '/refresh-token',
+  [
+    body('refreshToken').notEmpty().withMessage('Refresh token is required')
+  ],
+  validate,
+  refreshToken
+);
+
 router
   .route('/profile')
   .get(protect, getUserProfile)
