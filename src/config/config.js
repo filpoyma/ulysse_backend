@@ -16,7 +16,7 @@ const config = {
   rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "15000", 10),
   rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX || "100", 10),
   isDevelopment: env === "development",
-  isProduction: env === "production",
+  isProduction: false,
   isTest: env === "test",
 };
 
