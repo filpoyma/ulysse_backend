@@ -38,6 +38,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: config.isProduction,
       sameSite: "strict",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -69,6 +70,7 @@ export const loginUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: config.isProduction,
       sameSite: "strict",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -173,6 +175,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: config.isProduction,
       sameSite: "strict",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
