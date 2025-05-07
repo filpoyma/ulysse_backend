@@ -1,6 +1,7 @@
 import express from "express";
 import authRoutes from "./authRoutes.js";
-import productRoutes from "./productRoutes.js";
+import travelProgramRoutes from "./travelProgramRoutes.js";
+import uploadRoutes from "./uploadRoutes.js";
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ router.get("/health", (req, res) => {
 
 // API routes
 router.use("/auth", authRoutes);
-router.use("/products", productRoutes);
+router.use("/travel-program", travelProgramRoutes);
+router.use("/upload", uploadRoutes);
 
 export default router;

@@ -6,6 +6,7 @@ import {
   refreshToken,
   getUserProfile,
   updateUserProfile,
+  logout,
 } from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { validate } from "../middleware/validationMiddleware.js";
@@ -35,12 +36,9 @@ router.post(
   loginUser
 );
 
-router.post(
-  "/refresh-token",
-  [body("refreshToken").notEmpty().withMessage("Refresh token is required")],
-  validate,
-  refreshToken
-);
+router.post("/refresh-token", refreshToken);
+
+router.post("/logout", logout);
 
 router
   .route("/profile")

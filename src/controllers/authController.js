@@ -10,7 +10,7 @@ const generateTokens = (userId) => {
   });
 
   const refreshToken = jwt.sign({ id: userId }, config.jwtSecret, {
-    expiresIn: "7d",
+    expiresIn: config.jwtExpiresIn,
   });
 
   return { accessToken, refreshToken };
@@ -37,7 +37,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: config.isProduction,
-      sameSite: "lax",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -68,7 +68,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: config.isProduction,
-      sameSite: "lax",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -91,7 +91,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
-    throw new ApiError(401, "Refresh token is required");
+    throw new ApiError(401, "Refresh token is required2");
   }
 
   try {
@@ -108,7 +108,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: config.isProduction,
-      sameSite: "lax",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -137,7 +137,7 @@ export const logout = asyncHandler(async (req, res) => {
 
 export const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
-
+  console.log("file-authController.js req.user._id:", req.user._id);
   if (user) {
     res.json({
       success: true,
@@ -171,7 +171,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: config.isProduction,
-      sameSite: "lax",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 

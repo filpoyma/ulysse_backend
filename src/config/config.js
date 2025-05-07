@@ -3,8 +3,7 @@ import dotenv from "dotenv";
 // Load env vars
 dotenv.config();
 
-// const env = process.env.NODE_ENV || 'development';
-const env = process.env.NODE_ENV;
+const env = process.env.NODE_ENV || "development";
 
 const config = {
   env,
@@ -16,7 +15,7 @@ const config = {
   rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "15000", 10),
   rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX || "100", 10),
   isDevelopment: env === "development",
-  isProduction: false,
+  isProduction: env === "production",
   isTest: env === "test",
 };
 
