@@ -4,6 +4,13 @@ import User from "../models/userModel.js";
 import ApiError from "../utils/apiError.js";
 import config from "../config/config.js";
 
+const cookieOption = {
+  httpOnly: true,
+  secure: config.isProduction,
+  sameSite: config.isProduction ? "none" : "strict",
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+};
+
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ id: userId }, config.jwtSecret, {
     expiresIn: "15m",
@@ -34,12 +41,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = generateTokens(user._id);
 
     // Set refresh token in HTTP-only cookie
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: config.isProduction,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie("refreshToken", refreshToken, cookieOption);
 
     res.status(201).json({
       success: true,
@@ -65,12 +67,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = generateTokens(user._id);
 
     // Set refresh token in HTTP-only cookie
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: config.isProduction,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie("refreshToken", refreshToken, cookieOption);
 
     res.json({
       success: true,
@@ -105,12 +102,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
     const tokens = generateTokens(user._id);
 
     // Set new refresh token in HTTP-only cookie
-    res.cookie("refreshToken", tokens.refreshToken, {
-      httpOnly: true,
-      secure: config.isProduction,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie("refreshToken", tokens.refreshToken, cookieOption);
 
     res.json({
       success: true,
@@ -168,12 +160,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = generateTokens(updatedUser._id);
 
     // Set refresh token in HTTP-only cookie
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: config.isProduction,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie("refreshToken", refreshToken, cookieOption);
 
     res.json({
       success: true,
