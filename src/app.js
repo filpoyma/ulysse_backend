@@ -53,6 +53,7 @@ const limiter = rateLimit({
   max: config.rateLimitMax,
   standardHeaders: true,
   legacyHeaders: false,
+  trustProxy: true,
   message: 'Too many requests from this IP, please try again after 15 minutes'
 });
 app.use('/api', limiter);
