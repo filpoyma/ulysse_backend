@@ -38,7 +38,7 @@ app.use(helmet());
 
 // CORS
 app.use(cors({
-  origin: ['http://localhost:5173'],
+  origin: [config.frontendHost],
   credentials: true
 }));
 
@@ -48,15 +48,15 @@ if (config.isDevelopment) {
 }
 
 // Apply rate limiting
-const limiter = rateLimit({
-  windowMs: config.rateLimitWindowMs,
-  max: config.rateLimitMax,
-  standardHeaders: true,
-  legacyHeaders: false,
-  trustProxy: true,
-  message: 'Too many requests from this IP, please try again after 15 minutes'
-});
-app.use('/api', limiter);
+// const limiter = rateLimit({
+//   windowMs: config.rateLimitWindowMs,
+//   max: config.rateLimitMax,
+//   standardHeaders: true,
+//   legacyHeaders: false,
+//   trustProxy: true,
+//   message: 'Too many requests from this IP, please try again after 15 minutes'
+// });
+// app.use('/api', limiter);
 
 // Compression middleware
 app.use(compression());

@@ -17,6 +17,10 @@ const config = {
   isDevelopment: env === "development",
   isProduction: env === "production",
   isTest: env === "test",
+  frontendHost:
+    env === "development"
+      ? process.env.FRONTEND_HOST_DEV
+      : process.env.FRONTEND_HOST_PROD,
 };
 
 export default config;
