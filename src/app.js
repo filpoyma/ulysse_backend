@@ -41,6 +41,7 @@ app.use(cors({
   origin: [config.frontendHost],
   credentials: true
 }));
+console.log('config.frontendHost', config.frontendHost);
 
 // Request logging
 if (config.isDevelopment) {
