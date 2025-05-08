@@ -2,6 +2,7 @@ import express from "express";
 import authRoutes from "./authRoutes.js";
 import travelProgramRoutes from "./travelProgramRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
+import hotelRoutes from "./hotel.routes.js";
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.get("/health", (req, res) => {
 router.use("/auth", authRoutes);
 router.use("/travel-program", travelProgramRoutes);
 router.use("/upload", uploadRoutes);
+router.use("/hotels", hotelRoutes);
 
 export default router;
