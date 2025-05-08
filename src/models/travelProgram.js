@@ -44,9 +44,6 @@ const travelProgramSchema = mongoose.Schema(
   }
 );
 
-// Add unique indexes for name and name_eng
-travelProgramSchema.index({ name: 1 }, { unique: true });
-travelProgramSchema.index({ name_eng: 1 }, { unique: true });
 
 const TravelProgram = mongoose.model("TravelProgram", travelProgramSchema);
 

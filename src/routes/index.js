@@ -3,6 +3,7 @@ import authRoutes from "./authRoutes.js";
 import travelProgramRoutes from "./travelProgramRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
 import hotelRoutes from "./hotel.routes.js";
+import restaurantRoutes from "./restaurant.routes.js";
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use("/auth", authRoutes);
 router.use("/travel-program", travelProgramRoutes);
 router.use("/upload", uploadRoutes);
 router.use("/hotels", hotelRoutes);
+router.use("/restaurants", restaurantRoutes);
 
 export default router;
