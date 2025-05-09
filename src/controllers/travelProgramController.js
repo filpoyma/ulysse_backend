@@ -64,11 +64,54 @@ export const createTemplate = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Program with this English name already exists");
   }
 
-  const program = await TravelProgram.create({
+  const program = new TravelProgram({
     name,
     name_eng,
     bgImages: [],
+    secondPageTables: {
+      routeDetailsTable: {
+        review: [...Array(3)].map(() => ({
+          day: new Date(),
+          activity: [
+            {
+              icon: "none",
+              dayActivity: [
+                {
+                  title: "Title",
+                  subtitle: "Subtitle",
+                  more: "Подробнее",
+                },
+              ],
+            },
+          ],
+        })),
+      },
+      flights: [...Array(2)].map(() => ({
+        day: new Date(),
+        flight: [
+          {
+            icon: "none",
+            dayActivity: [
+              {
+                title: "Title",
+                subtitle: "Subtitle",
+                more: "Подробнее",
+              },
+            ],
+          },
+        ],
+      })),
+
+      accommodation: [...Array(2)].map((_, i) => ({
+        day: `Day ${i + 1}`,
+        hotelName: "Hotel Name",
+        details: "Details",
+        numOfNights: 3,
+      })),
+    },
   });
+  console.log(program);
+  await program.save();
 
   res.status(201).json({
     success: true,
