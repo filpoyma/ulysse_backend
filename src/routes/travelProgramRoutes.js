@@ -1,5 +1,5 @@
 import express from 'express';
-import { addImageToBgImages, getAllTravelPrograms, createTemplate, getTravelProgramById, getTravelProgramByName, deleteTravelProgram } from '../controllers/travelProgramController.js';
+import { addImageToBgImages, getAllTravelPrograms, createTemplate, getTravelProgramById, getTravelProgramByName, deleteTravelProgram, updateFirstPage } from '../controllers/travelProgramController.js';
 
 const router = express.Router();
 
@@ -20,5 +20,8 @@ router.post('/bg-image/', addImageToBgImages);
 
 // Delete travel program
 router.delete('/:id', deleteTravelProgram);
+
+// Update travel program first page
+router.route("/:id/first-page").put(updateFirstPage);
 
 export default router;

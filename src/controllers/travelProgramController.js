@@ -169,4 +169,37 @@ export const deleteTravelProgram = asyncHandler(async (req, res) => {
             message: 'Travel program deleted successfully'
         }
     });
+});
+
+// @desc    Update travel program first page
+// @route   PUT /api/v1/travel-program/:id/first-page
+// @access  Private
+export const updateFirstPage = asyncHandler(async (req, res, next) => {
+  const { title, subtitle, footer } = req.body;
+
+  let travelProgram = await TravelProgram.findById(req.params.id);
+
+  if (!travelProgram) {
+    throw new ApiError(404, `Travel program not found with id of ${req.params.id}`);
+  }
+
+  travelProgram = await TravelProgram.findByIdAndUpdate(
+    req.params.id,
+    {
+      firstPage: {
+        title,
+        subtitle,
+        footer,
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    data: travelProgram,
+  });
 }); 

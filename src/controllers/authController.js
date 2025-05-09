@@ -61,7 +61,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).lean();
 
   if (user && (await user.matchPassword(password))) {
     const { accessToken, refreshToken } = generateTokens(user._id);
@@ -71,7 +71,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 
     res.json({
       success: true,
-      data: {
+      user: {
         _id: user._id,
         name: user.name,
         email: user.email,
@@ -128,12 +128,11 @@ export const logout = asyncHandler(async (req, res) => {
 });
 
 export const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  console.log("file-authController.js req.user._id:", req.user._id);
+  const user = await User.findById(req.user._id).lean();
   if (user) {
     res.json({
       success: true,
-      data: {
+      user: {
         _id: user._id,
         name: user.name,
         email: user.email,
