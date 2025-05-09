@@ -183,8 +183,7 @@ export const deleteTravelProgram = asyncHandler(async (req, res) => {
 // @access  Private
 export const updateFirstPage = asyncHandler(async (req, res, next) => {
   const { title, subtitle, footer } = req.body;
-
-  let travelProgram = await TravelProgram.findById(req.params.id);
+  let travelProgram = await TravelProgram.findOne({ name_eng: req.params.id });
 
   if (!travelProgram) {
     throw new ApiError(
@@ -193,23 +192,15 @@ export const updateFirstPage = asyncHandler(async (req, res, next) => {
     );
   }
 
-  travelProgram = await TravelProgram.findByIdAndUpdate(
-    req.params.id,
-    {
-      firstPage: {
-        title,
-        subtitle,
-        footer,
-      },
-    },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  travelProgram.firstPage = {
+    title,
+    subtitle,
+    footer,
+  };
+  await travelProgram.save();
 
   res.status(200).json({
     success: true,
-    data: travelProgram,
+    data: travelProgram.firstPage,
   });
 });

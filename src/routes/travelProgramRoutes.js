@@ -30,6 +30,6 @@ router.delete("/:id", deleteTravelProgram);
 router.get("/:id", getTravelProgramById);
 
 // Update travel program first page
-router.route("/:id/first-page").put(updateFirstPage);
+router.put("/:id/first-page", updateFirstPage);
 
 export default router;
