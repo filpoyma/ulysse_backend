@@ -1,25 +1,33 @@
-import express from 'express';
-import { addImageToBgImages, getAllTravelPrograms, createTemplate, getTravelProgramById, getTravelProgramByName, deleteTravelProgram, updateFirstPage } from '../controllers/travelProgramController.js';
+import express from "express";
+import {
+  addImageToBgImages,
+  getAllTravelPrograms,
+  createTemplate,
+  getTravelProgramById,
+  getTravelProgramByName,
+  deleteTravelProgram,
+  updateFirstPage,
+} from "../controllers/travelProgramController.js";
 
 const router = express.Router();
 
 // Get all travel programs
-router.get('/', getAllTravelPrograms);
-
-// Get travel program by ID
-router.get('/:id', getTravelProgramById);
+router.get("/", getAllTravelPrograms);
 
 // Get travel program by name
-router.get('/name/:name', getTravelProgramByName);
+router.get("/name/:name", getTravelProgramByName);
 
 // Create travel program template
-router.post('/template', createTemplate);
+router.post("/template", createTemplate);
 
 // Add image to travel program's bgImages
-router.post('/bg-image/', addImageToBgImages);
+router.post("/bg-image", addImageToBgImages);
 
 // Delete travel program
-router.delete('/:id', deleteTravelProgram);
+router.delete("/:id", deleteTravelProgram);
+
+// Get travel program by ID
+router.get("/:id", getTravelProgramById);
 
 // Update travel program first page
 router.route("/:id/first-page").put(updateFirstPage);

@@ -10,6 +10,7 @@ const cookieOption = {
   sameSite: config.isProduction ? "none" : "strict",
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
+console.log("file-authController.js cookieOption:", cookieOption);
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ id: userId }, config.jwtSecret, {
@@ -61,7 +62,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).lean();
+  const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
     const { accessToken, refreshToken } = generateTokens(user._id);
@@ -86,6 +87,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 
 export const refreshToken = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
+  console.log("file-authController.js refreshToken:", refreshToken);
 
   if (!refreshToken) {
     throw new ApiError(401, "Refresh token is required2");
@@ -93,6 +95,10 @@ export const refreshToken = asyncHandler(async (req, res) => {
 
   try {
     const decoded = jwt.verify(refreshToken, config.jwtSecret);
+    console.log(
+      "file-authController.js decoded.id:>>>>>>>>>>>>>>>>>>>>>>>>>>",
+      decoded.id
+    );
     const user = await User.findById(decoded.id);
 
     if (!user) {
@@ -100,6 +106,10 @@ export const refreshToken = asyncHandler(async (req, res) => {
     }
 
     const tokens = generateTokens(user._id);
+    console.log(
+      "file-authController.js tokens.refreshToken:",
+      tokens.refreshToken
+    );
 
     // Set new refresh token in HTTP-only cookie
     res.cookie("refreshToken", tokens.refreshToken, cookieOption);
@@ -111,7 +121,8 @@ export const refreshToken = asyncHandler(async (req, res) => {
       },
     });
   } catch (error) {
-    throw new ApiError(401, "Invalid refresh token");
+    console.error("file-authController.js error:", error.message);
+    throw new ApiError(401, error.message);
   }
 });
 
