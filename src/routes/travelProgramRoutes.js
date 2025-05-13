@@ -7,6 +7,7 @@ import {
   getTravelProgramByName,
   deleteTravelProgram,
   updateFirstPage,
+  updateReviewDay,
 } from "../controllers/travelProgramController.js";
 
 const router = express.Router();
@@ -31,5 +32,8 @@ router.get("/:id", getTravelProgramById);
 
 // Update travel program first page
 router.put("/:id/first-page", updateFirstPage);
+
+// Update travel program review day
+router.put("/:id/review-day/:dayIndex", updateReviewDay);
 
 export default router;

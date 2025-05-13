@@ -1,24 +1,18 @@
-import asyncHandler from "express-async-handler";
-import TravelProgram from "../models/travelProgram.js";
-import Image from "../models/imageModel.js";
-import ApiError from "../utils/apiError.js";
-import { transliterate } from "../utils/transliterate.js";
+import asyncHandler from 'express-async-handler';
+import TravelProgram from '../models/travelProgram.js';
+import Image from '../models/imageModel.js';
+import ApiError from '../utils/apiError.js';
+import { transliterate } from '../utils/transliterate.js';
 
 // Get travel program by name
 export const getTravelProgramByName = asyncHandler(async (req, res) => {
   const { name } = req.params;
 
-  if (!name) {
-    throw new ApiError(400, "Program name is required");
-  }
+  if (!name) throw new ApiError(400, 'Program name is required');
 
-  const program = await TravelProgram.findOne({ name_eng: name }).populate(
-    "bgImages"
-  );
+  const program = await TravelProgram.findOne({ name_eng: name }).populate('bgImages');
 
-  if (!program) {
-    throw new ApiError(404, "Travel program not found1");
-  }
+  if (!program) throw new ApiError(404, 'Travel program not found1');
 
   res.status(200).json({
     success: true,
@@ -30,11 +24,9 @@ export const getTravelProgramByName = asyncHandler(async (req, res) => {
 export const getTravelProgramById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const program = await TravelProgram.findById(id).populate("bgImages");
+  const program = await TravelProgram.findById(id).populate('bgImages');
 
-  if (!program) {
-    throw new ApiError(404, "Travel program not found2");
-  }
+  if (!program) throw new ApiError(404, 'Travel program not found2');
 
   res.status(200).json({
     success: true,
@@ -46,14 +38,12 @@ export const getTravelProgramById = asyncHandler(async (req, res) => {
 export const createTemplate = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
-  if (!name) {
-    throw new ApiError(400, "Program name is required");
-  }
+  if (!name) throw new ApiError(400, 'Program name is required');
 
   // Check if program with this name already exists
   const existingProgram = await TravelProgram.findOne({ name });
   if (existingProgram) {
-    throw new ApiError(400, "Program with this name already exists");
+    throw new ApiError(400, 'Program with this name already exists');
   }
 
   const name_eng = transliterate(name);
@@ -61,7 +51,7 @@ export const createTemplate = asyncHandler(async (req, res) => {
   // Check if program with this name_eng already exists
   const existingProgramEng = await TravelProgram.findOne({ name_eng });
   if (existingProgramEng) {
-    throw new ApiError(400, "Program with this English name already exists");
+    throw new ApiError(400, 'Program with this English name already exists');
   }
 
   const program = new TravelProgram({
@@ -70,47 +60,46 @@ export const createTemplate = asyncHandler(async (req, res) => {
     bgImages: [],
     secondPageTables: {
       routeDetailsTable: {
-        review: [...Array(3)].map(() => ({
+        review: [...Array(3)].map((_, i) => ({
           day: new Date(),
-          activity: [
-            {
-              icon: "none",
-              dayActivity: [
-                {
-                  title: "Title",
-                  subtitle: "Subtitle",
-                  more: "Подробнее",
-                },
-              ],
+          numOfDay: i + 1,
+          activity: [...Array(3)].map((_, i) => ({
+            icon: i === 1 ? 'plane' : 'none',
+            dayActivity: {
+              line1: 'title',
+              line2: 'subtitle',
+              line3: 'one more line',
+              more: 'more info',
+              isFlight: i === 1,
             },
-          ],
+          })),
         })),
       },
-      flights: [...Array(2)].map(() => ({
-        day: new Date(),
-        flight: [
-          {
-            icon: "none",
-            dayActivity: [
-              {
-                title: "Title",
-                subtitle: "Subtitle",
-                more: "Подробнее",
-              },
-            ],
-          },
-        ],
-      })),
+      // flights: [...Array(2)].map(() => ({
+      //   day: new Date(),
+      //   flight: [
+      //     {
+      //       icon: 'none',
+      //       dayActivity: [
+      //         {
+      //           title: 'Title',
+      //           subtitle: 'Subtitle',
+      //           more: 'more info',
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // })),
 
-      accommodation: [...Array(2)].map((_, i) => ({
+      accommodation: [...Array(3)].map((_, i) => ({
         day: `Day ${i + 1}`,
-        hotelName: "Hotel Name",
-        details: "Details",
+        hotelName: 'Hotel Name',
+        details: 'Details',
         numOfNights: 3,
       })),
     },
   });
-  console.log(program);
+
   await program.save();
 
   res.status(201).json({
@@ -124,7 +113,7 @@ export const getAllTravelPrograms = asyncHandler(async (req, res) => {
   const programs = await TravelProgram.find({});
 
   if (!programs) {
-    throw new ApiError(404, "No travel programs found");
+    throw new ApiError(404, 'No travel programs found');
   }
 
   res.status(200).json({
@@ -136,15 +125,7 @@ export const getAllTravelPrograms = asyncHandler(async (req, res) => {
 // Add image to travel program's bgImages
 export const addImageToBgImages = asyncHandler(async (req, res) => {
   const { programName, imageId, imageNumber } = req.body;
-  console.log(
-    "file-travelProgramController.js programName, imageId, imageNumber:",
-    programName,
-    imageId,
-    imageNumber
-  );
-  if (!programName || !imageId) {
-    throw new ApiError(400, "Program name and image ID are required");
-  }
+  if (!programName || !imageId) throw new ApiError(400, 'Program name and image ID are required');
 
   // Check if both program and image exist
   const [program, image] = await Promise.all([
@@ -153,18 +134,16 @@ export const addImageToBgImages = asyncHandler(async (req, res) => {
   ]);
 
   if (!program) {
-    throw new ApiError(404, "Travel program not found3");
+    throw new ApiError(404, 'Travel program not found3');
   }
 
   if (!image) {
-    throw new ApiError(404, "Image not found");
+    throw new ApiError(404, 'Image not found');
   }
 
   // If imageNumber is provided, validate it
   if (imageNumber !== undefined) {
-    if (imageNumber < 0) {
-      throw new ApiError(400, "Image number cannot be negative");
-    }
+    if (imageNumber < 0) throw new ApiError(400, 'Image number cannot be negative');
 
     // Ensure the array is long enough
     while (program.bgImages.length < imageNumber) {
@@ -180,22 +159,18 @@ export const addImageToBgImages = asyncHandler(async (req, res) => {
   try {
     await program.save();
   } catch (error) {
-    throw new ApiError(500, "Failed to save travel program");
+    throw new ApiError(500, 'Failed to save travel program');
   }
 
   // Return updated program with populated bgImages
-  const updatedProgram = await TravelProgram.findById(program._id).populate(
-    "bgImages"
-  );
+  const updatedProgram = await TravelProgram.findById(program._id).populate('bgImages');
 
-  if (!updatedProgram) {
-    throw new ApiError(500, "Failed to retrieve updated program");
-  }
+  if (!updatedProgram) throw new ApiError(500, 'Failed to retrieve updated program');
 
   res.status(200).json({
     success: true,
     data: {
-      message: "Image added to bgImages successfully",
+      message: 'Image added to bgImages successfully',
       program: updatedProgram,
     },
   });
@@ -208,7 +183,7 @@ export const deleteTravelProgram = asyncHandler(async (req, res) => {
   const program = await TravelProgram.findById(id);
 
   if (!program) {
-    throw new ApiError(404, "Travel program not found4");
+    throw new ApiError(404, 'Travel program not found4');
   }
 
   await program.deleteOne();
@@ -216,7 +191,7 @@ export const deleteTravelProgram = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     data: {
-      message: "Travel program deleted successfully",
+      message: 'Travel program deleted successfully',
     },
   });
 });
@@ -229,10 +204,7 @@ export const updateFirstPage = asyncHandler(async (req, res, next) => {
   let travelProgram = await TravelProgram.findOne({ name_eng: req.params.id });
 
   if (!travelProgram) {
-    throw new ApiError(
-      404,
-      `Travel program not found with id of ${req.params.id}`
-    );
+    throw new ApiError(404, `Travel program not found with id of ${req.params.id}`);
   }
 
   travelProgram.firstPage = {
@@ -245,5 +217,45 @@ export const updateFirstPage = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: travelProgram.firstPage,
+  });
+});
+
+// @desc    Update travel program review day
+// @route   PUT /api/v1/travel-program/:id/review-day/:dayIndex
+// @access  Private
+export const updateReviewDay = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { dayIndex } = req.params;
+  const { day, activity, numOfDay } = req.body;
+  console.log('file-travelProgramController.js day:', day);
+  // return res.end();
+  const travelProgram = await TravelProgram.findById(id);
+
+  if (!travelProgram) {
+    throw new ApiError(404, `Travel program not found with id of ${id}`);
+  }
+
+  if (!travelProgram.secondPageTables?.routeDetailsTable?.review) {
+    throw new ApiError(404, 'Review data not found');
+  }
+
+  const reviewData = travelProgram.secondPageTables.routeDetailsTable.review;
+  // if (!reviewData[dayIndex]) {
+  //   throw new ApiError(404, `Day with index ${dayIndex} not found`);
+  // }
+  // console.log('file-travelProgramController.js reviewData:', reviewData);
+
+  reviewData[dayIndex] = {
+    day: day || reviewData[dayIndex].day,
+    numOfDay: Number(numOfDay) || reviewData[dayIndex].numOfDay,
+    activity: activity || reviewData[dayIndex].activity,
+  };
+  console.log('file-travelProgramController.js reviewData[dayIndex]:', reviewData[dayIndex]);
+
+  await travelProgram.save();
+
+  res.status(200).json({
+    success: true,
+    data: reviewData[dayIndex],
   });
 });

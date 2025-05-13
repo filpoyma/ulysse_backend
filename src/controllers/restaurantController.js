@@ -4,7 +4,7 @@ import ApiError from '../utils/apiError.js';
 
 // Получить все рестораны
 const getAllRestaurants = asyncHandler(async (req, res) => {
-  const restaurants = await Restaurant.find();
+  const restaurants = await Restaurant.find({});
   res.status(200).json({ success: true, data: restaurants });
 });
 
@@ -31,7 +31,7 @@ const updateRestaurant = asyncHandler(async (req, res) => {
   const restaurant = await Restaurant.findByIdAndUpdate(
     req.params.id,
     { name, country, city, region, manager, stars },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
   if (!restaurant) throw new ApiError(404, 'Restaurant not found');
   res.status(200).json({ success: true, data: restaurant });
@@ -50,4 +50,4 @@ export default {
   createRestaurant,
   updateRestaurant,
   deleteRestaurant,
-}; 
+};
