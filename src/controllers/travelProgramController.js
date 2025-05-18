@@ -184,7 +184,7 @@ export const deleteTravelProgram = asyncHandler(async (req, res) => {
 // @desc    Update travel program first page
 // @route   PUT /api/v1/travel-program/:id/first-page
 // @access  Private
-export const updateFirstPage = asyncHandler(async (req, res, next) => {
+export const updateFirstPage = asyncHandler(async (req, res) => {
   const { title, subtitle, footer } = req.body;
   let travelProgram = await TravelProgram.findOne({ name_eng: req.params.id });
 
@@ -208,7 +208,7 @@ export const updateFirstPage = asyncHandler(async (req, res, next) => {
 // @desc    Update travel program review day
 // @route   PUT /api/v1/travel-program/:id/review-day/:dayIndex
 // @access  Private
-export const updateReviewDay = asyncHandler(async (req, res, next) => {
+export const updateReviewDay = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { dayIndex } = req.params;
   const { day, activity, numOfDay } = req.body;
@@ -235,7 +235,6 @@ export const updateReviewDay = asyncHandler(async (req, res, next) => {
     numOfDay: Number(numOfDay) || reviewData[dayIndex].numOfDay,
     activity: activity || reviewData[dayIndex].activity,
   };
-  console.log('file-travelProgramController.js reviewData[dayIndex]:', reviewData[dayIndex]);
 
   await travelProgram.save();
 
@@ -256,9 +255,9 @@ export const updateAccommodationRow = asyncHandler(async (req, res) => {
     throw new ApiError(400, `Accommodation not found with id of ${id}`);
   }
 
-  if (rowIndex < 0 || rowIndex >= program.secondPageTables.accommodation.length) {
-    throw new ApiError(400, 'Invalid row index');
-  }
+  // if (rowIndex < 0 || rowIndex >= program.secondPageTables.accommodation.length) {
+  //   throw new ApiError(400, 'Invalid row index');
+  // }
 
   program.secondPageTables.accommodation[rowIndex] = updatedRow;
   await program.save();
