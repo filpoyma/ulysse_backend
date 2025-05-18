@@ -41,7 +41,6 @@ const reviewDaySchema = new mongoose.Schema(
   {
     day: {
       type: Date,
-      required: true,
       default: new Date(),
     },
     numOfDay: { type: Number },
@@ -50,23 +49,10 @@ const reviewDaySchema = new mongoose.Schema(
   // { _id: false }
 );
 
-const flightDaySchema = new mongoose.Schema(
-  {
-    day: {
-      type: Date,
-      required: true,
-      default: new Date(),
-    },
-    flight: [activitySchema],
-  },
-  { _id: false },
-);
-
 const accommodationSchema = new mongoose.Schema(
   {
-    day: {
+    period: {
       type: String,
-      required: true,
       trim: true,
     },
     hotelName: {
@@ -98,13 +84,8 @@ const tablesSchema = new mongoose.Schema(
       type: routeDetailsTableSchema,
       // default: () => ({}),
     },
-    // flights: {
-    //   type: [flightDaySchema],
-    //   // default: [],
-    // },
     accommodation: {
       type: [accommodationSchema],
-      // default: [],
     },
   },
   { _id: false },

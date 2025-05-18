@@ -75,26 +75,11 @@ export const createTemplate = asyncHandler(async (req, res) => {
           })),
         })),
       },
-      // flights: [...Array(2)].map(() => ({
-      //   day: new Date(),
-      //   flight: [
-      //     {
-      //       icon: 'none',
-      //       dayActivity: [
-      //         {
-      //           title: 'Title',
-      //           subtitle: 'Subtitle',
-      //           more: 'more info',
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // })),
 
       accommodation: [...Array(3)].map((_, i) => ({
-        day: `Day ${i + 1}`,
-        hotelName: 'Hotel Name',
-        details: 'Details',
+        period: `${i + 1} - ${i + 2}`,
+        hotelName: 'Hotel Name' + (i + 1),
+        details: 'Details' + (i + 1),
         numOfNights: 3,
       })),
     },
@@ -258,4 +243,25 @@ export const updateReviewDay = asyncHandler(async (req, res, next) => {
     success: true,
     data: reviewData[dayIndex],
   });
+});
+
+export const updateAccommodationRow = asyncHandler(async (req, res) => {
+  const { id, rowIndex } = req.params;
+  const updatedRow = req.body; // { period, hotelName, details, numOfNights }
+
+  const program = await TravelProgram.findById(id);
+  if (!program) throw new ApiError(404, 'TravelProgram not found');
+
+  if (!program.secondPageTables || !Array.isArray(program.secondPageTables.accommodation)) {
+    throw new ApiError(400, `Accommodation not found with id of ${id}`);
+  }
+
+  if (rowIndex < 0 || rowIndex >= program.secondPageTables.accommodation.length) {
+    throw new ApiError(400, 'Invalid row index');
+  }
+
+  program.secondPageTables.accommodation[rowIndex] = updatedRow;
+  await program.save();
+
+  res.json({ data: program.secondPageTables.accommodation[rowIndex], success: true });
 });
