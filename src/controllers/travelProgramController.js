@@ -255,12 +255,31 @@ export const updateAccommodationRow = asyncHandler(async (req, res) => {
     throw new ApiError(400, `Accommodation not found with id of ${id}`);
   }
 
-  // if (rowIndex < 0 || rowIndex >= program.secondPageTables.accommodation.length) {
-  //   throw new ApiError(400, 'Invalid row index');
-  // }
-
   program.secondPageTables.accommodation[rowIndex] = updatedRow;
   await program.save();
 
   res.json({ data: program.secondPageTables.accommodation[rowIndex], success: true });
+});
+
+// @desc    Delete accommodation row
+// @route   DELETE /api/v1/travel-program/:id/accommodation/:rowIndex
+// @access  Private
+export const deleteAccommodationRow = asyncHandler(async (req, res) => {
+  const { id, rowIndex } = req.params;
+
+  const program = await TravelProgram.findById(id);
+  if (!program) throw new ApiError(404, 'TravelProgram not found');
+
+  if (!program.secondPageTables || !Array.isArray(program.secondPageTables.accommodation)) {
+    throw new ApiError(400, `Accommodation not found with id of ${id}`);
+  }
+
+  // Удаляем строку из массива
+  program.secondPageTables.accommodation.splice(rowIndex, 1);
+  await program.save();
+
+  res.json({ 
+    success: true, 
+    data: program.secondPageTables.accommodation 
+  });
 });

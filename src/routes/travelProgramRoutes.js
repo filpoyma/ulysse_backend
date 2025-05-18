@@ -9,6 +9,7 @@ import {
   updateFirstPage,
   updateReviewDay,
   updateAccommodationRow,
+  deleteAccommodationRow,
 } from '../controllers/travelProgramController.js';
 
 const router = express.Router();
@@ -25,10 +26,7 @@ router.post('/template', createTemplate);
 // Add image to travel program's bgImages
 router.post('/bg-image', addImageToBgImages);
 
-// Delete travel program
 router.delete('/:id', deleteTravelProgram);
-
-// Get travel program by ID
 router.get('/:id', getTravelProgramById);
 
 // Update travel program first page
@@ -38,5 +36,6 @@ router.put('/:id/first-page', updateFirstPage);
 router.put('/:id/review-day/:dayIndex', updateReviewDay);
 
 router.put('/:id/accommodation/:rowIndex', updateAccommodationRow);
+router.delete('/:id/accommodation/:rowIndex', deleteAccommodationRow);
 
 export default router;
