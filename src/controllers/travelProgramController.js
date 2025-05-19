@@ -5,7 +5,7 @@ import ApiError from '../utils/apiError.js';
 import { transliterate } from '../utils/transliterate.js';
 
 // Get travel program by name
-export const getTravelProgramByName = asyncHandler(async (req, res) => {
+const getTravelProgramByName = asyncHandler(async (req, res) => {
   const { name } = req.params;
 
   if (!name) throw new ApiError(400, 'Program name is required');
@@ -21,7 +21,7 @@ export const getTravelProgramByName = asyncHandler(async (req, res) => {
 });
 
 // Get travel program by ID
-export const getTravelProgramById = asyncHandler(async (req, res) => {
+const getTravelProgramById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const program = await TravelProgram.findById(id).populate('bgImages');
@@ -35,24 +35,20 @@ export const getTravelProgramById = asyncHandler(async (req, res) => {
 });
 
 // Create travel program template
-export const createTemplate = asyncHandler(async (req, res) => {
+const createTemplate = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
   if (!name) throw new ApiError(400, 'Program name is required');
 
   // Check if program with this name already exists
   const existingProgram = await TravelProgram.findOne({ name });
-  if (existingProgram) {
-    throw new ApiError(400, 'Program with this name already exists');
-  }
+  if (existingProgram) throw new ApiError(400, 'Program with this name already exists');
 
   const name_eng = transliterate(name);
 
   // Check if program with this name_eng already exists
   const existingProgramEng = await TravelProgram.findOne({ name_eng });
-  if (existingProgramEng) {
-    throw new ApiError(400, 'Program with this English name already exists');
-  }
+  if (existingProgramEng) throw new ApiError(400, 'Program with this English name already exists');
 
   const program = new TravelProgram({
     name,
@@ -94,12 +90,10 @@ export const createTemplate = asyncHandler(async (req, res) => {
 });
 
 // Get all travel programs
-export const getAllTravelPrograms = asyncHandler(async (req, res) => {
+const getAllTravelPrograms = asyncHandler(async (req, res) => {
   const programs = await TravelProgram.find({});
 
-  if (!programs) {
-    throw new ApiError(404, 'No travel programs found');
-  }
+  if (!programs) throw new ApiError(404, 'No travel programs found');
 
   res.status(200).json({
     success: true,
@@ -108,7 +102,7 @@ export const getAllTravelPrograms = asyncHandler(async (req, res) => {
 });
 
 // Add image to travel program's bgImages
-export const addImageToBgImages = asyncHandler(async (req, res) => {
+const addImageToBgImages = asyncHandler(async (req, res) => {
   const { programName, imageId, imageNumber } = req.body;
   if (!programName || !imageId) throw new ApiError(400, 'Program name and image ID are required');
 
@@ -118,13 +112,9 @@ export const addImageToBgImages = asyncHandler(async (req, res) => {
     Image.findById(imageId),
   ]);
 
-  if (!program) {
-    throw new ApiError(404, 'Travel program not found3');
-  }
+  if (!program) throw new ApiError(404, 'Travel program not found3');
 
-  if (!image) {
-    throw new ApiError(404, 'Image not found');
-  }
+  if (!image) throw new ApiError(404, 'Image not found');
 
   // If imageNumber is provided, validate it
   if (imageNumber !== undefined) {
@@ -162,14 +152,12 @@ export const addImageToBgImages = asyncHandler(async (req, res) => {
 });
 
 // Delete travel program
-export const deleteTravelProgram = asyncHandler(async (req, res) => {
+const deleteTravelProgram = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const program = await TravelProgram.findById(id);
 
-  if (!program) {
-    throw new ApiError(404, 'Travel program not found4');
-  }
+  if (!program) throw new ApiError(404, 'Travel program not found4');
 
   await program.deleteOne();
 
@@ -181,16 +169,12 @@ export const deleteTravelProgram = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Update travel program first page
-// @route   PUT /api/v1/travel-program/:id/first-page
-// @access  Private
-export const updateFirstPage = asyncHandler(async (req, res) => {
+const updateFirstPage = asyncHandler(async (req, res) => {
   const { title, subtitle, footer } = req.body;
   let travelProgram = await TravelProgram.findOne({ name_eng: req.params.id });
 
-  if (!travelProgram) {
+  if (!travelProgram)
     throw new ApiError(404, `Travel program not found with id of ${req.params.id}`);
-  }
 
   travelProgram.firstPage = {
     title,
@@ -205,30 +189,19 @@ export const updateFirstPage = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Update travel program review day
-// @route   PUT /api/v1/travel-program/:id/review-day/:dayIndex
-// @access  Private
-export const updateReviewDay = asyncHandler(async (req, res) => {
+const updateReviewDay = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { dayIndex } = req.params;
   const { day, activity, numOfDay } = req.body;
-  console.log('file-travelProgramController.js day:', day);
-  // return res.end();
+
   const travelProgram = await TravelProgram.findById(id);
 
-  if (!travelProgram) {
-    throw new ApiError(404, `Travel program not found with id of ${id}`);
-  }
+  if (!travelProgram) throw new ApiError(404, `Travel program not found with id of ${id}`);
 
-  if (!travelProgram.secondPageTables?.routeDetailsTable?.review) {
+  if (!travelProgram.secondPageTables?.routeDetailsTable?.review)
     throw new ApiError(404, 'Review data not found');
-  }
 
   const reviewData = travelProgram.secondPageTables.routeDetailsTable.review;
-  // if (!reviewData[dayIndex]) {
-  //   throw new ApiError(404, `Day with index ${dayIndex} not found`);
-  // }
-  // console.log('file-travelProgramController.js reviewData:', reviewData);
 
   reviewData[dayIndex] = {
     day: day || reviewData[dayIndex].day,
@@ -244,16 +217,15 @@ export const updateReviewDay = asyncHandler(async (req, res) => {
   });
 });
 
-export const updateAccommodationRow = asyncHandler(async (req, res) => {
+const updateAccommodationRow = asyncHandler(async (req, res) => {
   const { id, rowIndex } = req.params;
   const updatedRow = req.body; // { period, hotelName, details, numOfNights }
 
   const program = await TravelProgram.findById(id);
   if (!program) throw new ApiError(404, 'TravelProgram not found');
 
-  if (!program.secondPageTables || !Array.isArray(program.secondPageTables.accommodation)) {
+  if (!program.secondPageTables || !Array.isArray(program.secondPageTables.accommodation))
     throw new ApiError(400, `Accommodation not found with id of ${id}`);
-  }
 
   program.secondPageTables.accommodation[rowIndex] = updatedRow;
   await program.save();
@@ -261,25 +233,34 @@ export const updateAccommodationRow = asyncHandler(async (req, res) => {
   res.json({ data: program.secondPageTables.accommodation[rowIndex], success: true });
 });
 
-// @desc    Delete accommodation row
-// @route   DELETE /api/v1/travel-program/:id/accommodation/:rowIndex
-// @access  Private
-export const deleteAccommodationRow = asyncHandler(async (req, res) => {
+const deleteAccommodationRow = asyncHandler(async (req, res) => {
   const { id, rowIndex } = req.params;
 
   const program = await TravelProgram.findById(id);
   if (!program) throw new ApiError(404, 'TravelProgram not found');
 
-  if (!program.secondPageTables || !Array.isArray(program.secondPageTables.accommodation)) {
+  if (!program.secondPageTables || !Array.isArray(program.secondPageTables.accommodation))
     throw new ApiError(400, `Accommodation not found with id of ${id}`);
-  }
 
   // Удаляем строку из массива
   program.secondPageTables.accommodation.splice(rowIndex, 1);
   await program.save();
 
-  res.json({ 
-    success: true, 
-    data: program.secondPageTables.accommodation 
+  res.json({
+    success: true,
+    data: program.secondPageTables.accommodation,
   });
 });
+
+export default {
+  addImageToBgImages,
+  getAllTravelPrograms,
+  createTemplate,
+  getTravelProgramById,
+  getTravelProgramByName,
+  deleteTravelProgram,
+  updateFirstPage,
+  updateReviewDay,
+  updateAccommodationRow,
+  deleteAccommodationRow,
+};

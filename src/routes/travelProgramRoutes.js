@@ -1,41 +1,35 @@
 import express from 'express';
-import {
-  addImageToBgImages,
-  getAllTravelPrograms,
-  createTemplate,
-  getTravelProgramById,
-  getTravelProgramByName,
-  deleteTravelProgram,
-  updateFirstPage,
-  updateReviewDay,
-  updateAccommodationRow,
-  deleteAccommodationRow,
-} from '../controllers/travelProgramController.js';
+import travelProgramController from '../controllers/travelProgramController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 // Get all travel programs
-router.get('/', getAllTravelPrograms);
+router.get('/', travelProgramController.getAllTravelPrograms);
 
 // Get travel program by name
-router.get('/name/:name', getTravelProgramByName);
+router.get('/name/:name', travelProgramController.getTravelProgramByName);
 
 // Create travel program template
-router.post('/template', createTemplate);
+router.post('/template', protect, travelProgramController.createTemplate);
 
 // Add image to travel program's bgImages
-router.post('/bg-image', addImageToBgImages);
+router.post('/bg-image', protect, travelProgramController.addImageToBgImages);
 
-router.delete('/:id', deleteTravelProgram);
-router.get('/:id', getTravelProgramById);
+router
+  .route('/:id')
+  .get(travelProgramController.getTravelProgramById)
+  .delete(protect, travelProgramController.deleteTravelProgram);
 
 // Update travel program first page
-router.put('/:id/first-page', updateFirstPage);
+router.put('/:id/first-page', protect, travelProgramController.updateFirstPage);
 
 // Update travel program review day
-router.put('/:id/review-day/:dayIndex', updateReviewDay);
+router.put('/:id/review-day/:dayIndex', protect, travelProgramController.updateReviewDay);
 
-router.put('/:id/accommodation/:rowIndex', updateAccommodationRow);
-router.delete('/:id/accommodation/:rowIndex', deleteAccommodationRow);
+router
+  .route('/:id/accommodation/:rowIndex')
+  .put(protect, travelProgramController.updateAccommodationRow)
+  .delete(protect, travelProgramController.deleteAccommodationRow);
 
 export default router;
