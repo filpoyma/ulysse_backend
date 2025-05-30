@@ -141,6 +141,10 @@ const travelProgramSchema = mongoose.Schema(
       type: tablesSchema,
       default: () => ({}),
     },
+    thirdPageMap: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Map',
+    },
   },
   {
     timestamps: true,

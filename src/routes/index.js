@@ -4,6 +4,8 @@ import travelProgramRoutes from "./travelProgramRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
 import hotelRoutes from "./hotel.routes.js";
 import restaurantRoutes from "./restaurant.routes.js";
+import countryRoutes from "./countryRoutes.js";
+import mapRoutes from "./mapRoutes.js";
 
 const router = express.Router();
 
@@ -22,5 +24,7 @@ router.use("/travel-program", travelProgramRoutes);
 router.use("/upload", uploadRoutes);
 router.use("/hotels", hotelRoutes);
 router.use("/restaurants", restaurantRoutes);
+router.use("/countries", countryRoutes);
+router.use("/map", mapRoutes);
 
 export default router;

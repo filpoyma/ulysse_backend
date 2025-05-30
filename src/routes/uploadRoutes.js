@@ -1,145 +1,32 @@
 import express from 'express';
-import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
-import Image from '../models/imageModel.js';
 import { protect } from '../middleware/authMiddleware.js';
+import uploadController from './../controllers/uploadController.js';
 
 const router = express.Router();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Ensure upload directory exists
-const uploadDir = path.join(__dirname, '../../upload');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Configure multer storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
-});
-
-// File filter to only allow images
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only image files are allowed!'), false);
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit
-  },
-});
 
 // Route for single image upload
-router.post('/image', upload.single('image'), protect, async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
-
-    const image = await Image.create({
-      filename: req.file.filename,
-      path: `/upload/${req.file.filename}`,
-      originalName: req.file.originalname,
-      mimetype: req.file.mimetype,
-      size: req.file.size,
-    });
-
-    res.status(200).json({
-      message: 'File uploaded successfully',
-      image,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+router.post(
+  '/image',
+  protect,
+  uploadController.upload.single('image'),
+  uploadController.uploadSingleImage,
+);
 
 // Route for multiple image upload
-router.post('/images', protect, upload.array('images', 5), async (req, res) => {
-  try {
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ error: 'No files uploaded' });
-    }
-
-    const images = await Promise.all(
-      req.files.map(file =>
-        Image.create({
-          filename: file.filename,
-          path: `/upload/${file.filename}`,
-          originalName: file.originalname,
-          mimetype: file.mimetype,
-          size: file.size,
-        }),
-      ),
-    );
-
-    res.status(200).json({
-      message: 'Files uploaded successfully',
-      images,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+router.post(
+  '/images',
+  protect,
+  uploadController.upload.array('images', 5),
+  uploadController.uploadMultiplyImage,
+);
 
 // Get all images
-router.get('/images', async (req, res) => {
-  try {
-    const images = await Image.find({});
-    res.status(200).json(images);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+router.get('/images', uploadController.getAllImages);
 
 // Get image by ID
-router.get('/image/:id', async (req, res) => {
-  try {
-    const image = await Image.findById(req.params.id);
-    if (!image) {
-      return res.status(404).json({ error: 'Image not found' });
-    }
-    res.status(200).json(image);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+router.get('/image/:id', uploadController.getImageById);
 
 // Delete image by ID
-router.delete('/image/:id', protect, async (req, res) => {
-  try {
-    const image = await Image.findById(req.params.id);
-    if (!image) {
-      return res.status(404).json({ error: 'Image not found' });
-    }
-
-    // Delete file from filesystem
-    const filePath = path.join(uploadDir, image.filename);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-
-    // Delete from database
-    await Image.findByIdAndDelete(req.params.id);
-
-    res.status(200).json({ message: 'Image deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+router.delete('/image/:id', protect, uploadController.deleteImage);
 
 export default router;

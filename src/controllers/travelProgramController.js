@@ -3,6 +3,7 @@ import TravelProgram from '../models/travelProgram.js';
 import Image from '../models/imageModel.js';
 import ApiError from '../utils/apiError.js';
 import { transliterate } from '../utils/transliterate.js';
+import MapData from '../models/mapModel.js';
 
 // Get travel program by name
 const getTravelProgramByName = asyncHandler(async (req, res) => {
@@ -10,7 +11,10 @@ const getTravelProgramByName = asyncHandler(async (req, res) => {
 
   if (!name) throw new ApiError(400, 'Program name is required');
 
-  const program = await TravelProgram.findOne({ name_eng: name }).populate('bgImages');
+  const program = await TravelProgram.findOne({ name_eng: name }).populate([
+    'bgImages',
+    'thirdPageMap',
+  ]);
 
   if (!program) throw new ApiError(404, 'Travel program not found1');
 
@@ -24,7 +28,7 @@ const getTravelProgramByName = asyncHandler(async (req, res) => {
 const getTravelProgramById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const program = await TravelProgram.findById(id).populate('bgImages');
+  const program = await TravelProgram.findById(id).populate(['bgImages', 'thirdPageMap']);
 
   if (!program) throw new ApiError(404, 'Travel program not found2');
 
@@ -81,7 +85,49 @@ const createTemplate = asyncHandler(async (req, res) => {
     },
   });
 
-  await program.save();
+  const mapData = new MapData({
+    logistics: [
+      {
+        city: 'Tokyo',
+        coordinates: [139.7671, 35.6812],
+        routeType: 'flight',
+        markerColor: '',
+        sourceMapIcon: 'startPoint',
+        sourceListIcon: 'flightArrivalMarker',
+        time: '0ч 00мин',
+        distance: '000км',
+        hotel: 'Hotel name',
+      },
+      {
+        city: 'Osaka',
+        coordinates: [135.5023, 34.6937],
+        routeType: 'driving',
+        markerColor: '',
+        sourceMapIcon: 'startPoint',
+        sourceListIcon: 'hotelMarker',
+        time: '0ч 00мин',
+        distance: '000км',
+        hotel: 'Hotel name',
+      },
+      {
+        city: 'Kyoto',
+        coordinates: [135.7681, 35.0116],
+        routeType: 'flight',
+        markerColor: '',
+        sourceMapIcon: 'startPoint',
+        sourceListIcon: 'hotelMarker',
+        time: '0ч 00мин',
+        distance: '000км',
+        hotel: 'Hotel name',
+      },
+    ],
+    mapCenter: [138.46675563464663, 36.35583007420196],
+    zoom: 6,
+  });
+
+  program.thirdPageMap = mapData._id;
+
+  await Promise.all([program.save(), mapData.save()]);
 
   res.status(201).json({
     success: true,
