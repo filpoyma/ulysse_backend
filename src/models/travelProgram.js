@@ -112,6 +112,51 @@ const firstPageSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const timeLineSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    trim: true,
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
+});
+
+const daysDataSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    trim: true,
+  },
+  nights: {
+    type: Number,
+    default: 1,
+  },
+  subtitle: {
+    type: String,
+    trim: true,
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
+  pros: [
+    {
+      type: String,
+      trim: true,
+      _id: true,
+    },
+  ],
+  info: [
+    {
+      type: String,
+      trim: true,
+      _id: true,
+    },
+  ],
+  timeLine: [timeLineSchema],
+});
+
 const travelProgramSchema = mongoose.Schema(
   {
     name: {
@@ -144,6 +189,15 @@ const travelProgramSchema = mongoose.Schema(
     thirdPageMap: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Map',
+    },
+    fourthPageDay: {
+      gallery: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Image',
+        },
+      ],
+      daysData: [daysDataSchema],
     },
   },
   {

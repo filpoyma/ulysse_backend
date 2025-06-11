@@ -70,6 +70,15 @@ const getAllImages = async (req, res) => {
   }
 };
 
+const getImagesByIds = async (req, res) => {
+  try {
+    const images = await Image.find({ _id: { $in: req.params.ids } });
+    res.status(200).json(images);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const getImageById = async (req, res) => {
   try {
     const image = await Image.findById(req.params.id);
