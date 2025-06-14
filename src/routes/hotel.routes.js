@@ -11,8 +11,12 @@ router.get('/:id', hotelController.getHotelById);
 // Создать отель
 router.post('/', protect, hotelController.createHotel);
 // Обновить отель
-router.put('/:id', protect,hotelController.updateHotel);
-// Удалить отель
-router.delete('/:id', protect,hotelController.deleteHotel);
+router.put('/:id', protect, hotelController.updateHotel);
 
-export default router; 
+router.patch('/main-image', protect, hotelController.updateMainImage);
+router.patch('/gallery', hotelController.updateGallery);
+
+// Удалить отель
+router.delete('/:id', protect, hotelController.deleteHotel);
+
+export default router;

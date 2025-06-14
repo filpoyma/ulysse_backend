@@ -4,33 +4,51 @@ import ApiError from '../utils/apiError.js';
 
 // Получить все отели
 const getAllHotels = asyncHandler(async (req, res) => {
-  const hotels = await Hotel.find();
+  const hotels = await Hotel.find().populate([
+    'mainImage',
+    'hotelInfo.gallery',
+    'roomInfo.gallery',
+  ]);
   res.status(200).json({ success: true, data: hotels });
 });
 
 // Получить один отель по id
 const getHotelById = asyncHandler(async (req, res) => {
-  const hotel = await Hotel.findById(req.params.id);
+  const hotel = await Hotel.findById(req.params.id).populate([
+    'mainImage',
+    'hotelInfo.gallery',
+    'roomInfo.gallery',
+  ]);
   if (!hotel) throw new ApiError(404, 'Hotel not found');
   res.status(200).json({ success: true, data: hotel });
 });
 
 // Создать отель
 const createHotel = asyncHandler(async (req, res) => {
-  const { name, country, link, region } = req.body;
-  if (!name || !country || !link || !region) throw new ApiError(400, 'All fields are required');
-  const hotel = await Hotel.create({ name, country, link, region });
+  const { name, country, address, region } = req.body;
+  if (!name || !country || !address || !region) throw new ApiError(400, 'All fields are required');
+  const hotel = new Hotel({ name, country, address, region });
+  await hotel.save();
   res.status(201).json({ success: true, data: hotel });
 });
 
 // Обновить отель
 const updateHotel = asyncHandler(async (req, res) => {
   const updateData = {};
-  
+
   // Список полей, которые могут быть обновлены
   const allowedFields = [
-    'name', 'country', 'region', 'link', 'address',
-    'hotelInfo', 'roomInfo', 'pros', 'shortInfo', 'coordinates', 'mainImage'
+    'name',
+    'country',
+    'region',
+    'link',
+    'address',
+    'hotelInfo',
+    'roomInfo',
+    'pros',
+    'shortInfo',
+    'coordinates',
+    'mainImage',
   ];
 
   // Проверяем каждое поле и добавляем его в updateData только если оно есть в req.body
@@ -40,14 +58,36 @@ const updateHotel = asyncHandler(async (req, res) => {
     }
   });
 
-  const hotel = await Hotel.findByIdAndUpdate(
-    req.params.id,
-    updateData,
-    { new: true, runValidators: true }
-  );
+  const hotel = await Hotel.findByIdAndUpdate(req.params.id, updateData, {
+    new: true,
+    runValidators: true,
+  }).populate(['mainImage', 'hotelInfo.gallery', 'roomInfo.gallery']);
 
   if (!hotel) throw new ApiError(404, 'Hotel not found');
   res.status(200).json({ success: true, data: hotel });
+});
+
+const updateMainImage = asyncHandler(async (req, res) => {
+  const { hotelId, imageId } = req.body;
+
+  if (!hotelId || !imageId) {
+    throw new ApiError(400, 'Hotel ID and Image ID are required');
+  }
+
+  const hotel = await Hotel.findByIdAndUpdate(
+    hotelId,
+    { mainImage: imageId },
+    { new: true, runValidators: true },
+  ).populate(['mainImage', 'hotelInfo.gallery', 'roomInfo.gallery']);
+
+  if (!hotel) {
+    throw new ApiError(404, 'Hotel not found');
+  }
+
+  res.status(200).json({
+    success: true,
+    data: hotel,
+  });
 });
 
 // Удалить отель
@@ -57,10 +97,49 @@ const deleteHotel = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: 'Hotel deleted' });
 });
 
+// Обновить галерею отеля
+const updateGallery = asyncHandler(async (req, res) => {
+  const { hotelId, galleryType, imageIds } = req.body;
+
+  if (!hotelId || !galleryType || !Array.isArray(imageIds)) {
+    throw new ApiError(400, 'Hotel ID, gallery type and image IDs array are required');
+  }
+
+  // Проверяем, что galleryType соответствует ожидаемым значениям
+  if (!['hotelInfo.gallery', 'roomInfo.gallery'].includes(galleryType)) {
+    throw new ApiError(400, 'Invalid gallery type');
+  }
+
+  // Создаем объект для обновления
+  const updateData = {};
+  if (galleryType === 'hotelInfo.gallery') {
+    updateData['hotelInfo.gallery'] = imageIds;
+  } else {
+    updateData['roomInfo.gallery'] = imageIds;
+  }
+
+  const hotel = await Hotel.findByIdAndUpdate(
+    hotelId,
+    { $set: updateData },
+    { new: true, runValidators: true },
+  ).populate(['mainImage', 'hotelInfo.gallery', 'roomInfo.gallery']);
+
+  if (!hotel) {
+    throw new ApiError(404, 'Hotel not found');
+  }
+
+  res.status(200).json({
+    success: true,
+    data: hotel,
+  });
+});
+
 export default {
   getAllHotels,
   getHotelById,
   createHotel,
   updateHotel,
   deleteHotel,
+  updateMainImage,
+  updateGallery,
 };
