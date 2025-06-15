@@ -4,30 +4,34 @@ const imageSchema = mongoose.Schema(
   {
     filename: {
       type: String,
-      required: true
+      required: true,
     },
     path: {
       type: String,
-      required: true
+      required: true,
     },
     originalName: {
       type: String,
-      required: true
+      required: true,
     },
     mimetype: {
       type: String,
-      required: true
+      required: true,
     },
     size: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
+    belongsToId: {
+      type: String,
+      index: true,
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 const Image = mongoose.model('Image', imageSchema);
 
-export default Image; 
+export default Image;

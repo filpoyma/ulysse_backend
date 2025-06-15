@@ -39,7 +39,6 @@ const uploadMultiplyImage = async (req, res) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: 'No files uploaded' });
     }
-
     const images = await Promise.all(
       req.files.map(file =>
         Image.create({
@@ -48,6 +47,7 @@ const uploadMultiplyImage = async (req, res) => {
           originalName: file.originalname,
           mimetype: file.mimetype,
           size: file.size,
+          belongsToId: req.body.belongsToId,
         }),
       ),
     );
@@ -63,16 +63,20 @@ const uploadMultiplyImage = async (req, res) => {
 
 const getAllImages = async (req, res) => {
   try {
-    const images = await Image.find({});
+    const belongsId = req.query.id;
+    console.log('file-uploadController.js belongsId:', typeof belongsId);
+    const images = belongsId
+      ? await Image.find({ belongsToId: belongsId }).lean()
+      : await Image.find({}).lean();
     res.status(200).json(images);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-const getImagesByIds = async (req, res) => {
+const getImagesByBelongId = async (req, res) => {
   try {
-    const images = await Image.find({ _id: { $in: req.params.ids } });
+    const images = await Image.find({ belongsToId: req.params.id }).lean();
     res.status(200).json(images);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -154,6 +158,7 @@ export default {
   uploadMultiplyImage,
   getAllImages,
   getImageById,
+  getImagesByBelongId,
   deleteImage,
   upload,
 };

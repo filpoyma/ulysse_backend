@@ -23,6 +23,9 @@ router.post(
 // Get all images
 router.get('/images', uploadController.getAllImages);
 
+// Get belongs images by id
+router.get('/images/:id', uploadController.getImagesByBelongId);
+
 // Get image by ID
 router.get('/image/:id', uploadController.getImageById);
 
