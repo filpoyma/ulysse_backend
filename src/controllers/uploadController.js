@@ -63,13 +63,13 @@ const uploadMultiplyImage = async (req, res) => {
 
 const getAllImages = async (req, res) => {
   try {
-    const belongsId = req.query.id;
-    console.log('file-uploadController.js belongsId:', typeof belongsId);
-    const images = belongsId
-      ? await Image.find({ belongsToId: belongsId }).lean()
+    const belongsToId = req.query.id;
+    const images = belongsToId
+      ? await Image.find({ belongsToId }).lean()
       : await Image.find({}).lean();
     res.status(200).json(images);
   } catch (error) {
+    console.error('getAllImages err:', getAllImages);
     res.status(500).json({ error: error.message });
   }
 };

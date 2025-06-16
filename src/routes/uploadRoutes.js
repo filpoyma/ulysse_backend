@@ -16,7 +16,7 @@ router.post(
 router.post(
   '/images',
   protect,
-  uploadController.upload.array('images', 5),
+  uploadController.upload.array('images', 10),
   uploadController.uploadMultiplyImage,
 );
 
