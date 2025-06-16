@@ -16,7 +16,9 @@ const getAllCountries = asyncHandler(async (req, res) => {
 
 // Get country by ID
 const getCountry = asyncHandler(async (req, res) => {
+  console.log('file-countryController.js req.params.id:', req.params.id);
   const country = await Country.findById(req.params.id);
+  console.log('file-countryController.js country:', country);
 
   if (!country) throw new ApiError(404, 'Country not found');
 
