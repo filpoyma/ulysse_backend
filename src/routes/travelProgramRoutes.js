@@ -15,6 +15,7 @@ router.post('/template', protect, travelProgramController.createTemplate);
 
 // Add image to travel program's bgImages
 router.post('/bg-image', protect, travelProgramController.addImageToBgImages);
+router.post('/gallery', protect, travelProgramController.addImagesToGallery);
 
 router
   .route('/:id')

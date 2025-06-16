@@ -14,6 +14,7 @@ const getTravelProgramByName = asyncHandler(async (req, res) => {
   const program = await TravelProgram.findOne({ name_eng: name }).populate([
     'bgImages',
     'thirdPageMap',
+    'fourthPageDay.gallery',
   ]);
 
   if (!program) throw new ApiError(404, 'Travel program not found1');
@@ -28,7 +29,11 @@ const getTravelProgramByName = asyncHandler(async (req, res) => {
 const getTravelProgramById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const program = await TravelProgram.findById(id).populate(['bgImages', 'thirdPageMap']);
+  const program = await TravelProgram.findById(id).populate([
+    'bgImages',
+    'thirdPageMap',
+    'fourthPageDay.gallery',
+  ]);
 
   if (!program) throw new ApiError(404, 'Travel program not found2');
 
@@ -177,11 +182,7 @@ const addImageToBgImages = asyncHandler(async (req, res) => {
     program.bgImages.push(imageId);
   }
 
-  try {
-    await program.save();
-  } catch (error) {
-    throw new ApiError(500, 'Failed to save travel program');
-  }
+  await program.save();
 
   // Return updated program with populated bgImages
   const updatedProgram = await TravelProgram.findById(program._id).populate('bgImages');
@@ -193,6 +194,48 @@ const addImageToBgImages = asyncHandler(async (req, res) => {
     data: {
       message: 'Image added to bgImages successfully',
       program: updatedProgram,
+    },
+  });
+});
+
+const addImagesToGallery = asyncHandler(async (req, res) => {
+  const { programId, imageIds } = req.body;
+
+  if (!programId || !Array.isArray(imageIds)) {
+    throw new ApiError(400, 'Program ID and image IDs array are required');
+  }
+
+  // Проверяем существование программы
+  const program = await TravelProgram.findById(programId);
+  if (!program) {
+    throw new ApiError(404, 'Travel program not found');
+  }
+
+  // Проверяем существование всех изображений
+  const images = await Image.find({ _id: { $in: imageIds } });
+  if (images.length !== imageIds.length) {
+    throw new ApiError(404, 'One or more images not found');
+  }
+
+  // Добавляем новые изображения в галерею
+  // program.fourthPageDay.gallery = [
+  //   ...program.fourthPageDay.gallery,
+  //   ...imageIds
+  // ];
+
+  program.fourthPageDay.gallery = imageIds;
+
+  // Сохраняем изменения
+  await program.save();
+
+  // Возвращаем обновленную программу с заполненными данными изображений
+  const updatedProgram = await TravelProgram.findById(programId).populate('fourthPageDay.gallery');
+
+  res.status(200).json({
+    success: true,
+    data: {
+      message: 'Images added to gallery successfully',
+      fourthPageDay: updatedProgram.fourthPageDay,
     },
   });
 });
@@ -300,6 +343,7 @@ const deleteAccommodationRow = asyncHandler(async (req, res) => {
 
 export default {
   addImageToBgImages,
+  addImagesToGallery,
   getAllTravelPrograms,
   createTemplate,
   getTravelProgramById,

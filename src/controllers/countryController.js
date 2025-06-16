@@ -4,7 +4,7 @@ import ApiError from '../utils/apiError.js';
 
 // Get all countries
 const getAllCountries = asyncHandler(async (req, res) => {
-  const countries = await Country.find();
+  const countries = await Country.find().lean();
 
   if (!countries) throw new ApiError(404, 'No countries found');
 
@@ -16,10 +16,7 @@ const getAllCountries = asyncHandler(async (req, res) => {
 
 // Get country by ID
 const getCountry = asyncHandler(async (req, res) => {
-  console.log('file-countryController.js req.params.id:', req.params.id);
-  const country = await Country.findById(req.params.id);
-  console.log('file-countryController.js country:', country);
-
+  const country = await Country.findById(req.params.id).lean();
   if (!country) throw new ApiError(404, 'Country not found');
 
   res.status(200).json({
