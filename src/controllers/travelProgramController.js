@@ -218,12 +218,7 @@ const addImagesToGallery = asyncHandler(async (req, res) => {
   }
 
   // Добавляем новые изображения в галерею
-  // program.fourthPageDay.gallery = [
-  //   ...program.fourthPageDay.gallery,
-  //   ...imageIds
-  // ];
-
-  program.fourthPageDay.gallery = imageIds;
+  program.fourthPageDay.gallery = [...program.fourthPageDay.gallery, ...imageIds];
 
   // Сохраняем изменения
   await program.save();

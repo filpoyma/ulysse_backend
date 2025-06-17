@@ -101,9 +101,10 @@ const deleteHotel = asyncHandler(async (req, res) => {
 const updateGallery = asyncHandler(async (req, res) => {
   const { hotelId, galleryType, imageIds } = req.body;
 
-  if (!hotelId || !galleryType || !Array.isArray(imageIds)) {
+  if (!hotelId || !galleryType || !Array.isArray(imageIds))
     throw new ApiError(400, 'Hotel ID, gallery type and image IDs array are required');
-  }
+
+  const hotel = await Hotel.findById(hotelId).lean();
 
   // Проверяем, что galleryType соответствует ожидаемым значениям
   if (!['hotelInfo.gallery', 'roomInfo.gallery'].includes(galleryType)) {
@@ -113,24 +114,20 @@ const updateGallery = asyncHandler(async (req, res) => {
   // Создаем объект для обновления
   const updateData = {};
   if (galleryType === 'hotelInfo.gallery') {
-    updateData['hotelInfo.gallery'] = imageIds;
+    updateData['hotelInfo.gallery'] = [...hotel.hotelInfo.gallery, ...imageIds];
   } else {
-    updateData['roomInfo.gallery'] = imageIds;
+    updateData['roomInfo.gallery'] = [...hotel.roomInfo.gallery, ...imageIds];
   }
 
-  const hotel = await Hotel.findByIdAndUpdate(
+  const updatedHotel = await Hotel.findByIdAndUpdate(
     hotelId,
     { $set: updateData },
     { new: true, runValidators: true },
   ).populate(['mainImage', 'hotelInfo.gallery', 'roomInfo.gallery']);
 
-  if (!hotel) {
-    throw new ApiError(404, 'Hotel not found');
-  }
-
   res.status(200).json({
     success: true,
-    data: hotel,
+    data: updatedHotel,
   });
 });
 
