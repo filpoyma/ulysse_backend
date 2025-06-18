@@ -124,6 +124,7 @@ const timeLineSchema = new mongoose.Schema({
 });
 
 const daysDataSchema = new mongoose.Schema({
+  header: { date: Date, dayIndex: Number },
   title: {
     type: String,
     trim: true,
@@ -154,7 +155,7 @@ const daysDataSchema = new mongoose.Schema({
       _id: true,
     },
   ],
-  timeLine: [timeLineSchema],
+  schedule: [timeLineSchema],
 });
 
 const travelProgramSchema = mongoose.Schema(

@@ -111,12 +111,20 @@ const updateGallery = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Invalid gallery type');
   }
 
+  // Получаем текущую галерею
+  const currentGallery =
+    galleryType === 'hotelInfo.gallery' ? hotel.hotelInfo.gallery : hotel.roomInfo.gallery;
+
+  // Фильтруем новые изображения, исключая те, которые уже есть в галерее
+  const newImageIds = imageIds.filter(
+    id => !currentGallery.map(({ _id }) => _id.toString()).includes(id),
+  );
   // Создаем объект для обновления
   const updateData = {};
   if (galleryType === 'hotelInfo.gallery') {
-    updateData['hotelInfo.gallery'] = [...hotel.hotelInfo.gallery, ...imageIds];
+    updateData['hotelInfo.gallery'] = [...currentGallery, ...newImageIds];
   } else {
-    updateData['roomInfo.gallery'] = [...hotel.roomInfo.gallery, ...imageIds];
+    updateData['roomInfo.gallery'] = [...currentGallery, ...newImageIds];
   }
 
   const updatedHotel = await Hotel.findByIdAndUpdate(

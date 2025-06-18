@@ -4,6 +4,7 @@ import Image from '../models/imageModel.js';
 import ApiError from '../utils/apiError.js';
 import { transliterate } from '../utils/transliterate.js';
 import MapData from '../models/mapModel.js';
+import { newTravelProgramDefault } from '../constants/placeholders.js';
 
 // Get travel program by name
 const getTravelProgramByName = asyncHandler(async (req, res) => {
@@ -59,36 +60,7 @@ const createTemplate = asyncHandler(async (req, res) => {
   const existingProgramEng = await TravelProgram.findOne({ name_eng });
   if (existingProgramEng) throw new ApiError(400, 'Program with this English name already exists');
 
-  const program = new TravelProgram({
-    name,
-    name_eng,
-    bgImages: [],
-    secondPageTables: {
-      routeDetailsTable: {
-        review: [...Array(3)].map((_, i) => ({
-          day: new Date(),
-          numOfDay: i + 1,
-          activity: [...Array(3)].map((_, i) => ({
-            icon: i === 1 ? 'plane' : 'none',
-            dayActivity: {
-              line1: 'title',
-              line2: 'subtitle',
-              line3: 'one more line',
-              more: 'more info',
-              isFlight: i === 1,
-            },
-          })),
-        })),
-      },
-
-      accommodation: [...Array(3)].map((_, i) => ({
-        period: `${i + 1} - ${i + 2}`,
-        hotelName: 'Hotel Name' + (i + 1),
-        details: 'Details' + (i + 1),
-        numOfNights: 3,
-      })),
-    },
-  });
+  const program = new TravelProgram(newTravelProgramDefault(name, name_eng));
 
   const mapData = new MapData({
     logistics: [
@@ -218,7 +190,11 @@ const addImagesToGallery = asyncHandler(async (req, res) => {
   }
 
   // Добавляем новые изображения в галерею
-  program.fourthPageDay.gallery = [...program.fourthPageDay.gallery, ...imageIds];
+  const currentGallery = program.fourthPageDay.gallery;
+  const newImageIds = imageIds.filter(
+    id => !currentGallery.map(({ _id }) => _id.toString()).includes(id),
+  );
+  program.fourthPageDay.gallery = [...currentGallery, ...newImageIds];
 
   // Сохраняем изменения
   await program.save();
@@ -301,6 +277,67 @@ const updateReviewDay = asyncHandler(async (req, res) => {
   });
 });
 
+const deleteReviewDay = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { dayIndex } = req.params;
+
+  const travelProgram = await TravelProgram.findById(id);
+
+  if (!travelProgram) throw new ApiError(404, `Travel program not found with id of ${id}`);
+
+  if (!travelProgram.secondPageTables?.routeDetailsTable?.review)
+    throw new ApiError(404, 'Review data not found');
+
+  const reviewData = travelProgram.secondPageTables.routeDetailsTable.review;
+
+  if (dayIndex >= reviewData.length) {
+    throw new ApiError(400, 'Day index out of bounds');
+  }
+
+  // Удаляем день из массива
+  reviewData.splice(dayIndex, 1);
+  await travelProgram.save();
+
+  res.status(200).json({
+    success: true,
+    data: reviewData,
+  });
+});
+
+const reorderReviewDays = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { fromIndex, toIndex } = req.body;
+
+  const travelProgram = await TravelProgram.findById(id);
+
+  if (!travelProgram) throw new ApiError(404, `Travel program not found with id of ${id}`);
+
+  if (!travelProgram.secondPageTables?.routeDetailsTable?.review)
+    throw new ApiError(404, 'Review data not found');
+
+  const reviewData = travelProgram.secondPageTables.routeDetailsTable.review;
+
+  if (fromIndex >= reviewData.length || toIndex >= reviewData.length) {
+    throw new ApiError(400, 'Day index out of bounds');
+  }
+
+  // Перемещаем день
+  const [movedDay] = reviewData.splice(fromIndex, 1);
+  reviewData.splice(toIndex, 0, movedDay);
+
+  // Обновляем номера дней
+  reviewData.forEach((day, index) => {
+    day.numOfDay = index + 1;
+  });
+
+  await travelProgram.save();
+
+  res.status(200).json({
+    success: true,
+    data: reviewData,
+  });
+});
+
 const updateAccommodationRow = asyncHandler(async (req, res) => {
   const { id, rowIndex } = req.params;
   const updatedRow = req.body; // { period, hotelName, details, numOfNights }
@@ -336,6 +373,113 @@ const deleteAccommodationRow = asyncHandler(async (req, res) => {
   });
 });
 
+// Update gallery
+const updateGallery = asyncHandler(async (req, res) => {
+  const { programId, imageIds } = req.body;
+  console.log('file-travelProgramController.js req.body:', req.body);
+
+  if (!programId || !imageIds) {
+    throw new ApiError(400, 'Program ID and gallery are required');
+  }
+
+  const program = await TravelProgram.findById(programId);
+  if (!program) {
+    throw new ApiError(404, 'Travel program not found');
+  }
+
+  // Обновляем галерею
+  program.fourthPageDay.gallery = imageIds;
+
+  await program.save();
+
+  // Возвращаем обновленную программу с заполненной галереей
+  const updatedProgram = await TravelProgram.findById(programId).populate('fourthPageDay.gallery');
+
+  res.status(200).json({
+    success: true,
+    data: {
+      message: 'Gallery updated successfully',
+      fourthPageDay: updatedProgram.fourthPageDay,
+    },
+  });
+});
+
+const updateDaySection = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { dayIndex } = req.params;
+  const updatedDayData = req.body;
+
+  const program = await TravelProgram.findById(id);
+  if (!program) throw new ApiError(404, 'TravelProgram not found');
+
+  if (!program.fourthPageDay || !Array.isArray(program.fourthPageDay.daysData)) {
+    throw new ApiError(400, 'Days data not found');
+  }
+
+  if (dayIndex >= program.fourthPageDay.daysData.length) {
+    throw new ApiError(400, 'Day index out of bounds');
+  }
+
+  // Обновляем данные дня
+  program.fourthPageDay.daysData[dayIndex] = updatedDayData;
+  await program.save();
+
+  res.status(200).json({
+    success: true,
+    data: program.fourthPageDay.daysData[dayIndex],
+  });
+});
+
+const addDaySection = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const newDayData = req.body;
+
+  const program = await TravelProgram.findById(id);
+  if (!program) throw new ApiError(404, 'TravelProgram not found');
+
+  if (!program.fourthPageDay) {
+    program.fourthPageDay = { gallery: [], daysData: [] };
+  }
+
+  if (!Array.isArray(program.fourthPageDay.daysData)) {
+    program.fourthPageDay.daysData = [];
+  }
+
+  // Добавляем новый день
+  program.fourthPageDay.daysData.push(newDayData);
+  await program.save();
+
+  res.status(201).json({
+    success: true,
+    data: newDayData,
+  });
+});
+
+const deleteDaySection = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { dayIndex } = req.params;
+
+  const program = await TravelProgram.findById(id);
+  if (!program) throw new ApiError(404, 'TravelProgram not found');
+
+  if (!program.fourthPageDay || !Array.isArray(program.fourthPageDay.daysData)) {
+    throw new ApiError(400, 'Days data not found');
+  }
+
+  if (dayIndex >= program.fourthPageDay.daysData.length) {
+    throw new ApiError(400, 'Day index out of bounds');
+  }
+
+  // Удаляем день из массива
+  program.fourthPageDay.daysData.splice(dayIndex, 1);
+  await program.save();
+
+  res.status(200).json({
+    success: true,
+    data: program.fourthPageDay.daysData,
+  });
+});
+
 export default {
   addImageToBgImages,
   addImagesToGallery,
@@ -346,6 +490,12 @@ export default {
   deleteTravelProgram,
   updateFirstPage,
   updateReviewDay,
+  deleteReviewDay,
   updateAccommodationRow,
   deleteAccommodationRow,
+  updateGallery,
+  updateDaySection,
+  addDaySection,
+  deleteDaySection,
+  reorderReviewDays,
 };
