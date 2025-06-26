@@ -54,3 +54,43 @@ export const newTravelProgramDefault = (name, name_eng) => ({
     },
   },
 });
+
+export const newMapData = {
+  logistics: [
+    {
+      city: 'Tokyo',
+      coordinates: [139.7671, 35.6812],
+      routeType: 'flight',
+      markerColor: '',
+      sourceMapIcon: 'startPoint',
+      sourceListIcon: 'flightArrivalMarker',
+      time: '0ч 00мин',
+      distance: '000км',
+      hotel: 'Hotel name',
+    },
+    {
+      city: 'Osaka',
+      coordinates: [135.5023, 34.6937],
+      routeType: 'driving',
+      markerColor: '',
+      sourceMapIcon: 'startPoint',
+      sourceListIcon: 'hotelMarker',
+      time: '0ч 00мин',
+      distance: '000км',
+      hotel: 'Hotel name',
+    },
+    {
+      city: 'Kyoto',
+      coordinates: [135.7681, 35.0116],
+      routeType: 'flight',
+      markerColor: '',
+      sourceMapIcon: 'startPoint',
+      sourceListIcon: 'hotelMarker',
+      time: '0ч 00мин',
+      distance: '000км',
+      hotel: 'Hotel name',
+    },
+  ],
+  mapCenter: [138.46675563464663, 36.35583007420196],
+  zoom: 6,
+};

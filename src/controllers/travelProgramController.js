@@ -4,7 +4,7 @@ import Image from '../models/imageModel.js';
 import ApiError from '../utils/apiError.js';
 import { transliterate } from '../utils/transliterate.js';
 import MapData from '../models/mapModel.js';
-import { newTravelProgramDefault } from '../constants/placeholders.js';
+import { newMapData, newTravelProgramDefault } from '../constants/placeholders.js';
 
 // Get travel program by name
 const getTravelProgramByName = asyncHandler(async (req, res) => {
@@ -62,45 +62,7 @@ const createTemplate = asyncHandler(async (req, res) => {
 
   const program = new TravelProgram(newTravelProgramDefault(name, name_eng));
 
-  const mapData = new MapData({
-    logistics: [
-      {
-        city: 'Tokyo',
-        coordinates: [139.7671, 35.6812],
-        routeType: 'flight',
-        markerColor: '',
-        sourceMapIcon: 'startPoint',
-        sourceListIcon: 'flightArrivalMarker',
-        time: '0ч 00мин',
-        distance: '000км',
-        hotel: 'Hotel name',
-      },
-      {
-        city: 'Osaka',
-        coordinates: [135.5023, 34.6937],
-        routeType: 'driving',
-        markerColor: '',
-        sourceMapIcon: 'startPoint',
-        sourceListIcon: 'hotelMarker',
-        time: '0ч 00мин',
-        distance: '000км',
-        hotel: 'Hotel name',
-      },
-      {
-        city: 'Kyoto',
-        coordinates: [135.7681, 35.0116],
-        routeType: 'flight',
-        markerColor: '',
-        sourceMapIcon: 'startPoint',
-        sourceListIcon: 'hotelMarker',
-        time: '0ч 00мин',
-        distance: '000км',
-        hotel: 'Hotel name',
-      },
-    ],
-    mapCenter: [138.46675563464663, 36.35583007420196],
-    zoom: 6,
-  });
+  const mapData = new MapData(newMapData);
 
   program.thirdPageMap = mapData._id;
 
