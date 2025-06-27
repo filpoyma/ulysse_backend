@@ -13,7 +13,7 @@ router.get('/:id', hotelsListController.getHotelsListById);
 router.use(protect);
 
 // Маршруты для администраторов
-router.use(admin);
+//router.use(admin);
 
 router.post('/', hotelsListController.createHotelsList);
 router.patch('/:id', hotelsListController.updateHotelsList);
@@ -23,4 +23,4 @@ router.delete('/:id', hotelsListController.deleteHotelsList);
 router.post('/:listId/hotels/:hotelId', hotelsListController.addHotelToList);
 router.delete('/:listId/hotels/:hotelId', hotelsListController.removeHotelFromList);
 
-export default router; 
+export default router;
