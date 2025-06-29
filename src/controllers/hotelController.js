@@ -25,9 +25,9 @@ const getHotelById = asyncHandler(async (req, res) => {
 
 // Создать отель
 const createHotel = asyncHandler(async (req, res) => {
-  const { name, country, address, region } = req.body;
-  if (!name || !country || !address || !region) throw new ApiError(400, 'All fields are required');
-  const hotel = new Hotel({ name, country, address, region });
+  const { name, country, city, region } = req.body;
+  if (!name || !country || !city) throw new ApiError(400, 'All fields are required');
+  const hotel = new Hotel({ name, country, city, region });
   await hotel.save();
   res.status(201).json({ success: true, data: hotel });
 });
@@ -40,6 +40,7 @@ const updateHotel = asyncHandler(async (req, res) => {
   const allowedFields = [
     'name',
     'country',
+    'city',
     'region',
     'link',
     'address',

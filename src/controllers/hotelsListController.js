@@ -27,13 +27,23 @@ const getAllHotelsLists = asyncHandler(async (req, res) => {
 // Получить список отелей по ID
 const getHotelsListById = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const { fullData } = req.query;
+  console.log('file-hotelsListController.js id:', typeof id);
+
+  const populateQuery =
+    fullData === 'true'
+      ? {
+          path: ['mainImage', 'roomInfo.gallery', 'hotelInfo.gallery'],
+          select: 'path filename',
+        }
+      : {
+          path: 'mainImage',
+          select: 'path filename',
+        };
 
   const hotelsList = await HotelsList.findById(id).populate({
     path: 'hotels',
-    populate: {
-      path: 'mainImage',
-      select: 'path filename',
-    },
+    populate: populateQuery,
   });
 
   if (!hotelsList) throw new ApiError(404, 'Список отелей не найден');

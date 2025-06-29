@@ -13,10 +13,16 @@ export const notFound = (req, res, next) => {
 /**
  * Handle validation errors
  */
-const handleValidationError = (err) => {
-  const errors = Object.values(err.errors).map((el) => el.message);
+const handleValidationError = err => {
+  const errors = Object.values(err.errors).map(el => el.message);
   const message = `Invalid input data. ${errors.join('. ')}`;
   return new ApiError(400, message);
+};
+const handleMongoValidationError = err => {
+  if (err.code === 11000) {
+    const message = `Поле ${JSON.stringify(err.keyValue)} с таким значением уже есть.`;
+    return new ApiError(400, message);
+  }
 };
 
 /**
@@ -27,7 +33,8 @@ const handleJWTError = () => new ApiError(401, 'Invalid token. Please log in aga
 /**
  * Handle JWT expired error
  */
-const handleJWTExpiredError = () => new ApiError(401, 'Your token has expired. Please log in again.');
+const handleJWTExpiredError = () =>
+  new ApiError(401, 'Your token has expired. Please log in again.');
 
 /**
  * Error handler middleware
@@ -38,14 +45,15 @@ export const errorHandler = (err, req, res, next) => {
   error.stack = err.stack;
 
   logger.error(`${err.name || 'Error'}: ${err.message}`);
-  
+
   // Convert mongoose validation error
   if (err.name === 'ValidationError') error = handleValidationError(err);
-  
+  if (err.name === 'MongoServerError') error = handleMongoValidationError(err);
+
   // JWT errors
   if (err.name === 'JsonWebTokenError') error = handleJWTError();
   if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
-  
+
   // Check if error has statusCode or use 500
   if (!error.statusCode) {
     error.statusCode = 500;
@@ -56,7 +64,7 @@ export const errorHandler = (err, req, res, next) => {
     success: false,
     status: error.statusCode,
     message: error.message,
-    ...(config.isDevelopment && { stack: error.stack })
+    ...(config.isDevelopment && { stack: error.stack }),
   };
 
   return res.status(error.statusCode).json(response);

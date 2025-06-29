@@ -13,6 +13,10 @@ const hotelSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    city: {
+      type: String,
+      trim: true,
+    },
     region: {
       type: String,
       trim: true,
