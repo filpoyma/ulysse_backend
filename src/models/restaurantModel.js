@@ -20,17 +20,44 @@ const restaurantSchema = new mongoose.Schema(
     },
     region: {
       type: String,
-
       trim: true,
     },
+    address: {
+      type: String,
+      trim: true,
+    },
+    link: {
+      type: String,
+      trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+      validate: {
+        validator: arr => Array.isArray(arr) && arr.length === 2,
+        message: 'Coordinates must be an array of two numbers [lng, lat]',
+      },
+      default: [0, 0],
+    },
+    titleImage: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Image',
+    },
+    gallery: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+      },
+    ],
     manager: {
       type: String,
-
       trim: true,
     },
     stars: {
       type: Number,
-
       min: 1,
       max: 5,
       validate: {
@@ -38,8 +65,6 @@ const restaurantSchema = new mongoose.Schema(
         message: 'Stars must be an integer',
       },
     },
-    titleImage: { type: String },
-    gallery: [String],
   },
   {
     timestamps: true,

@@ -7,11 +7,17 @@ const router = express.Router();
 // Получить все рестораны
 router.get('/', restaurantController.getAllRestaurants);
 
-// Получить один ресторан по id
-router.get('/:id', restaurantController.getRestaurantById);
-
 // Создать ресторан
 router.post('/', protect, restaurantController.createRestaurant);
+
+// Обновить главное изображение ресторана
+router.put('/update-title-image', protect, restaurantController.updateTitleImage);
+
+// Обновить галерею ресторана
+router.put('/update-gallery', protect, restaurantController.updateGallery);
+
+// Получить один ресторан по id
+router.get('/:id', restaurantController.getRestaurantById);
 
 // Обновить ресторан
 router.put('/:id', protect, restaurantController.updateRestaurant);

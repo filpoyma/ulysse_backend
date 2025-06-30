@@ -94,7 +94,6 @@ export const refreshToken = asyncHandler(async (req, res) => {
 
   try {
     const decoded = jwt.verify(refreshToken, config.jwtSecret);
-    console.log('file-authController.js decoded.id:>>>>>>>>>>>>>>>>>>>>>>>>>>', decoded.id);
     const user = await User.findById(decoded.id);
 
     if (!user) {
@@ -102,7 +101,6 @@ export const refreshToken = asyncHandler(async (req, res) => {
     }
 
     const tokens = generateTokens(user._id);
-    console.log('file-authController.js tokens.refreshToken:', tokens.refreshToken);
 
     // Set new refresh token in HTTP-only cookie
     res.cookie('refreshToken', tokens.refreshToken, cookieOption);
