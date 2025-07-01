@@ -7,6 +7,7 @@ import hotelsListRoutes from "./hotelsListRoutes.js";
 import restaurantRoutes from "./restaurant.routes.js";
 import countryRoutes from "./countryRoutes.js";
 import mapRoutes from "./mapRoutes.js";
+import restaurantsListRoutes from "./restaurantsListRoutes.js";
 
 const router = express.Router();
 
@@ -28,5 +29,6 @@ router.use("/hotels-lists", hotelsListRoutes);
 router.use("/restaurants", restaurantRoutes);
 router.use("/countries", countryRoutes);
 router.use("/map", mapRoutes);
+router.use("/restaurants-lists", restaurantsListRoutes);
 
 export default router;
