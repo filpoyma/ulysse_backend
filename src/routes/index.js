@@ -15,6 +15,7 @@ const router = express.Router();
 router.get('/health', (req, res) => {
   console.log('origin:', req.get('origin'));
   console.log('host:', req.get('host'));
+  console.log('headers:', req.get('headers'));
   res.status(200).json({
     status: 'success',
     message: 'API is running',
