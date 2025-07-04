@@ -43,6 +43,8 @@ const updateRestaurant = asyncHandler(async (req, res) => {
     'manager',
     'stars',
     'titleImage',
+    'shortInfo',
+    'cookDescription',
   ];
 
   // Проверяем каждое поле и добавляем его в updateData только если оно есть в req.body

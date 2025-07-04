@@ -34,6 +34,10 @@ const restaurantSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    cookDescription: {
+      type: String,
+      trim: true,
+    },
     coordinates: {
       type: [Number], // [longitude, latitude]
       validate: {
@@ -59,12 +63,19 @@ const restaurantSchema = new mongoose.Schema(
     stars: {
       type: Number,
       min: 1,
-      max: 5,
+      max: 10,
       validate: {
         validator: Number.isInteger,
         message: 'Stars must be an integer',
       },
     },
+    shortInfo: [
+      {
+        type: String,
+        trim: true,
+        _id: true,
+      },
+    ],
   },
   {
     timestamps: true,
