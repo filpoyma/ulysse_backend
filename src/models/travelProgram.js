@@ -173,6 +173,10 @@ const travelProgramSchema = mongoose.Schema(
       unique: true,
     },
     days: { type: Number, default: 3 },
+    manager: {
+      type: String,
+      trim: true,
+    },
     bgImages: [
       {
         type: mongoose.Schema.Types.ObjectId,

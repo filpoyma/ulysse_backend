@@ -1,10 +1,16 @@
 import mongoose from 'mongoose';
+import { transliterate } from '../utils/transliterate.js';
 
 const hotelSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
+      trim: true,
+      unique: true,
+    },
+    name_eng: {
+      type: String,
       trim: true,
       unique: true,
     },
@@ -88,6 +94,21 @@ const hotelSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+hotelSchema.pre('save', function(next) {
+  if (this.isModified('name')) {
+    this.name_eng = transliterate(this.name);
+  }
+  next();
+});
+
+hotelSchema.pre('findOneAndUpdate', function(next) {
+  const update = this.getUpdate();
+  if (update.name) {
+    update.name_eng = transliterate(update.name);
+  }
+  next();
+});
 
 const Hotel = mongoose.model('Hotel', hotelSchema);
 export default Hotel;

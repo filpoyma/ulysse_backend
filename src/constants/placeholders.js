@@ -1,6 +1,7 @@
-export const newTravelProgramDefault = (name, name_eng) => ({
+export const newTravelProgramDefault = (name, name_eng, manager) => ({
   name,
   name_eng,
+  manager,
   bgImages: [],
   secondPageTables: {
     routeDetailsTable: {

@@ -13,10 +13,40 @@ const getAllRestaurantsLists = asyncHandler(async (req, res) => {
 
 // Получить один список ресторанов по id
 const getRestaurantsListById = asyncHandler(async (req, res) => {
-  const list = await RestaurantsList.findWithRestaurants({ _id: req.params.id }).then(arr => arr[0]);
+  const { fullData } = req.query;
+  const { id } = req.params;
+  const populateQuery =
+    fullData === 'true'
+      ? {
+          path: 'restaurants',
+          populate: {
+            path: ['titleImage', 'gallery'],
+            select: 'path filename',
+          },
+        }
+      : {
+          path: 'restaurants',
+          select: 'name country city region titleImage coordinates',
+          populate: {
+            path: 'titleImage',
+            select: 'path filename',
+          },
+        };
+  const list = await RestaurantsList.findById(id).populate(populateQuery);
   if (!list) throw new ApiError(404, 'Restaurants list not found');
   res.status(200).json({ success: true, data: list });
 });
+
+//return this.find(query)
+//     .populate({
+//       path: 'restaurants',
+//       select: 'name country city region titleImage coordinates',
+//       populate: {
+//         path: 'titleImage',
+//         select: 'path filename',
+//       },
+//     })
+//     .sort({ sortOrder: 1, createdAt: -1 });
 
 // Создать список ресторанов
 const createRestaurantsList = asyncHandler(async (req, res) => {
@@ -29,13 +59,7 @@ const createRestaurantsList = asyncHandler(async (req, res) => {
 // Обновить список ресторанов
 const updateRestaurantsList = asyncHandler(async (req, res) => {
   const updateData = {};
-  const allowedFields = [
-    'name',
-    'description',
-    'restaurants',
-    'isActive',
-    'sortOrder',
-  ];
+  const allowedFields = ['name', 'description', 'restaurants', 'isActive', 'sortOrder'];
   allowedFields.forEach(field => {
     if (req.body[field] !== undefined) {
       updateData[field] = req.body[field];
@@ -82,4 +106,4 @@ export default {
   deleteRestaurantsList,
   addRestaurantToList,
   removeRestaurantFromList,
-}; 
+};

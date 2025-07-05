@@ -1,10 +1,16 @@
 import mongoose from 'mongoose';
+import { transliterate } from '../utils/transliterate.js';
 
 const restaurantSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
+      trim: true,
+      unique: true,
+    },
+    name_eng: {
+      type: String,
       trim: true,
       unique: true,
     },
@@ -62,8 +68,8 @@ const restaurantSchema = new mongoose.Schema(
     },
     stars: {
       type: Number,
-      min: 1,
-      max: 10,
+      min: 0,
+      max: 5,
       validate: {
         validator: Number.isInteger,
         message: 'Stars must be an integer',
@@ -81,6 +87,17 @@ const restaurantSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+restaurantSchema.pre('save', function (next) {
+  if (this.isModified('name')) this.name_eng = transliterate(this.name);
+  next();
+});
+
+restaurantSchema.pre('findOneAndUpdate', function (next) {
+  const update = this.getUpdate();
+  if (update.name) update.name_eng = transliterate(update.name);
+  next();
+});
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 

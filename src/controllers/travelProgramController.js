@@ -60,8 +60,9 @@ const createTemplate = asyncHandler(async (req, res) => {
   const existingProgramEng = await TravelProgram.findOne({ name_eng });
   if (existingProgramEng) throw new ApiError(400, 'Program with this English name already exists');
 
-  const program = new TravelProgram(newTravelProgramDefault(name, name_eng));
-
+  const manager = req.user.email;
+  console.log('file-travelProgramController.js manager:', manager);
+  const program = new TravelProgram(newTravelProgramDefault(name, name_eng, manager));
   const mapData = new MapData(newMapData);
 
   program.thirdPageMap = mapData._id;

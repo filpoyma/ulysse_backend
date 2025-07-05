@@ -22,5 +22,6 @@ router.delete('/:id', hotelsListController.deleteHotelsList);
 // Маршруты для управления отелями в списках
 router.post('/:listId/hotels/:hotelId', hotelsListController.addHotelToList);
 router.delete('/:listId/hotels/:hotelId', hotelsListController.removeHotelFromList);
+router.delete('/lists/:hotelId', hotelsListController.removeHotelFromLists);
 
 export default router;

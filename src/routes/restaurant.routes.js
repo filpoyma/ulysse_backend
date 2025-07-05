@@ -19,10 +19,13 @@ router.put('/update-gallery', protect, restaurantController.updateGallery);
 // Получить один ресторан по id
 router.get('/:id', restaurantController.getRestaurantById);
 
+// Получить один ресторан по name_eng
+router.get('/name/:name', restaurantController.getRestaurantByName);
+
 // Обновить ресторан
 router.put('/:id', protect, restaurantController.updateRestaurant);
 
 // Удалить ресторан
 router.delete('/:id', protect, restaurantController.deleteRestaurant);
 
-export default router; 
+export default router;

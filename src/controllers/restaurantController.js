@@ -4,13 +4,25 @@ import ApiError from '../utils/apiError.js';
 
 // Получить все рестораны
 const getAllRestaurants = asyncHandler(async (req, res) => {
-  const restaurants = await Restaurant.find({});
+  const restaurants = await Restaurant.find({}).populate(['gallery', 'titleImage']).lean();
   res.status(200).json({ success: true, data: restaurants });
 });
 
 // Получить один ресторан по id
 const getRestaurantById = asyncHandler(async (req, res) => {
   const restaurant = await Restaurant.findById(req.params.id).populate(['gallery', 'titleImage']);
+
+  if (!restaurant) throw new ApiError(404, 'Restaurant not found');
+  res.status(200).json({ success: true, data: restaurant });
+});
+
+// Получить один ресторан по name_eng
+const getRestaurantByName = asyncHandler(async (req, res) => {
+  const restaurant = await Restaurant.findOne({ name_eng: req.params.name }).populate([
+    'gallery',
+    'titleImage',
+  ]);
+
   if (!restaurant) throw new ApiError(404, 'Restaurant not found');
   res.status(200).json({ success: true, data: restaurant });
 });
@@ -21,7 +33,8 @@ const createRestaurant = asyncHandler(async (req, res) => {
   if (!name || !country || !city || !manager || !stars) {
     throw new ApiError(400, 'All fields are required');
   }
-  const restaurant = await Restaurant.create({ name, country, city, region, manager, stars });
+  const restaurant = new Restaurant({ name, country, city, region, manager, stars });
+  await restaurant.save();
   res.status(201).json({ success: true, data: restaurant });
 });
 
@@ -134,4 +147,5 @@ export default {
   deleteRestaurant,
   updateTitleImage,
   updateGallery,
+  getRestaurantByName,
 };

@@ -175,6 +175,53 @@ const removeHotelFromList = asyncHandler(async (req, res) => {
   });
 });
 
+// Удалить отель из всех списков
+const removeHotelFromLists = asyncHandler(async (req, res) => {
+  const { hotelId } = req.params;
+
+  const hotel = await Hotel.findById(hotelId);
+  if (!hotel) throw new ApiError(404, 'Отель не найден');
+
+  // Находим все списки, которые содержат этот отель
+  const listsWithHotel = await HotelsList.find({
+    hotels: hotelId,
+  });
+
+  if (listsWithHotel.length === 0) {
+    return res.status(200).json({
+      success: true,
+      message: 'Отель не найден ни в одном списке',
+      data: {
+        removedFromLists: 0,
+        lists: [],
+      },
+    });
+  }
+
+  // Удаляем отель из всех найденных списков
+  const updatePromises = listsWithHotel.map(list =>
+    HotelsList.findByIdAndUpdate(
+      list._id,
+      { $pull: { hotels: hotelId } },
+      { new: true, runValidators: true },
+    ),
+  );
+
+  const updatedLists = await Promise.all(updatePromises);
+
+  res.status(200).json({
+    success: true,
+    message: `Отель удален из ${updatedLists.length} списков`,
+    data: {
+      removedFromLists: updatedLists.length,
+      lists: updatedLists.map(list => ({
+        _id: list._id,
+        name: list.name,
+      })),
+    },
+  });
+});
+
 // Получить статистику списков отелей
 const getHotelsListsStats = asyncHandler(async (req, res) => {
   const stats = await HotelsList.aggregate([
@@ -211,4 +258,5 @@ export default {
   addHotelToList,
   removeHotelFromList,
   getHotelsListsStats,
+  removeHotelFromLists,
 };

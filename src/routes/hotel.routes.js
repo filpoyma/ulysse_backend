@@ -8,6 +8,7 @@ const router = express.Router();
 router.get('/', hotelController.getAllHotels);
 // Получить один отель по id
 router.get('/:id', hotelController.getHotelById);
+router.get('/name/:name', hotelController.getHotelByName);
 // Создать отель
 router.post('/', protect, hotelController.createHotel);
 // Обновить отель

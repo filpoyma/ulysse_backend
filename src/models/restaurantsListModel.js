@@ -75,18 +75,5 @@ restaurantsListSchema.statics.findActive = function () {
   return this.find({ isActive: true }).sort({ sortOrder: 1, createdAt: -1 });
 };
 
-restaurantsListSchema.statics.findWithRestaurants = function (query = {}) {
-  return this.find(query)
-    .populate({
-      path: 'restaurants',
-      select: 'name country city region titleImage coordinates',
-      populate: {
-        path: 'titleImage',
-        select: 'path filename',
-      },
-    })
-    .sort({ sortOrder: 1, createdAt: -1 });
-};
-
 const RestaurantsList = mongoose.model('RestaurantsList', restaurantsListSchema);
-export default RestaurantsList; 
+export default RestaurantsList;

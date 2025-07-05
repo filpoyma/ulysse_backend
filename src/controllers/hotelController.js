@@ -23,11 +23,22 @@ const getHotelById = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: hotel });
 });
 
+const getHotelByName = asyncHandler(async (req, res) => {
+  const hotel = await Hotel.findOne({ name_eng: req.params.name }).populate([
+    'mainImage',
+    'hotelInfo.gallery',
+    'roomInfo.gallery',
+  ]);
+  if (!hotel) throw new ApiError(404, 'Hotel not found');
+  res.status(200).json({ success: true, data: hotel });
+});
+
 // Создать отель
 const createHotel = asyncHandler(async (req, res) => {
   const { name, country, city, region } = req.body;
   if (!name || !country || !city) throw new ApiError(400, 'All fields are required');
   const hotel = new Hotel({ name, country, city, region });
+  console.log('file-hotelController.js hotel:', hotel);
   await hotel.save();
   res.status(201).json({ success: true, data: hotel });
 });
@@ -148,4 +159,5 @@ export default {
   deleteHotel,
   updateMainImage,
   updateGallery,
+  getHotelByName,
 };
