@@ -38,6 +38,10 @@ const restaurantsListSchema = new mongoose.Schema(
         default: Date.now,
       },
     },
+    titleImage: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Image',
+    },
   },
   {
     timestamps: true,
