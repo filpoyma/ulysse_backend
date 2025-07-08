@@ -14,7 +14,9 @@ const getAllHotelsLists = asyncHandler(async (req, res) => {
   if (withHotels === 'true') {
     hotelsLists = await HotelsList.findWithHotels(query);
   } else {
-    hotelsLists = await HotelsList.find(query).sort({ sortOrder: 1, createdAt: -1 });
+    hotelsLists = await HotelsList.find(query)
+      .sort({ sortOrder: 1, createdAt: -1 })
+      .populate('titleImage');
   }
 
   res.status(200).json({
@@ -28,7 +30,6 @@ const getAllHotelsLists = asyncHandler(async (req, res) => {
 const getHotelsListById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { fullData } = req.query;
-  console.log('file-hotelsListController.js id:', typeof id);
 
   const populateQuery =
     fullData === 'true'
@@ -42,9 +43,9 @@ const getHotelsListById = asyncHandler(async (req, res) => {
         };
 
   const hotelsList = await HotelsList.findById(id).populate({
-    path: 'hotels',
+    path: ['hotels'],
     populate: populateQuery,
-  });
+  }).populate({path: 'titleImage', select: 'path filename'});
 
   if (!hotelsList) throw new ApiError(404, 'Список отелей не найден');
 
@@ -86,8 +87,7 @@ const createHotelsList = asyncHandler(async (req, res) => {
 // Обновить список отелей
 const updateHotelsList = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, description, hotels, isActive, sortOrder } = req.body;
-
+  const { name, description, hotels, isActive, sortOrder, titleImage } = req.body;
   const hotelsList = await HotelsList.findById(id);
   if (!hotelsList) {
     throw new ApiError(404, 'Список отелей не найден');
@@ -107,6 +107,7 @@ const updateHotelsList = asyncHandler(async (req, res) => {
   if (hotels !== undefined) updateData.hotels = hotels;
   if (isActive !== undefined) updateData.isActive = isActive;
   if (sortOrder !== undefined) updateData.sortOrder = sortOrder;
+  if (titleImage !== undefined) updateData.titleImage = titleImage;
 
   const updatedHotelsList = await HotelsList.findByIdAndUpdate(id, updateData, {
     new: true,

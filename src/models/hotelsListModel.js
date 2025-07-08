@@ -17,9 +17,12 @@ const hotelsListSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Hotel',
-        required: true,
       },
     ],
+    titleImage: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Image',
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -85,13 +88,14 @@ hotelsListSchema.statics.findActive = function () {
 hotelsListSchema.statics.findWithHotels = function (query = {}) {
   return this.find(query)
     .populate({
-      path: 'hotels',
+      path: ['hotels'],
       select: 'name country region mainImage coordinates',
       populate: {
         path: 'mainImage',
         select: 'path filename',
       },
     })
+    .populate({ path: 'titleImage', select: 'path filename' })
     .sort({ sortOrder: 1, createdAt: -1 });
 };
 

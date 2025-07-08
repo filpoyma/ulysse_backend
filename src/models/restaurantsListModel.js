@@ -17,7 +17,6 @@ const restaurantsListSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Restaurant',
-        required: true,
       },
     ],
     isActive: {

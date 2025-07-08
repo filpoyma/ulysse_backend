@@ -32,7 +32,10 @@ const getRestaurantsListById = asyncHandler(async (req, res) => {
             select: 'path filename',
           },
         };
-  const list = await RestaurantsList.findById(id).populate(populateQuery);
+  const list = await RestaurantsList.findById(id).populate(populateQuery).populate({
+    path: 'titleImage',
+    select: 'path filename',
+  });
   if (!list) throw new ApiError(404, 'Restaurants list not found');
   res.status(200).json({ success: true, data: list });
 });
@@ -59,7 +62,14 @@ const createRestaurantsList = asyncHandler(async (req, res) => {
 // Обновить список ресторанов
 const updateRestaurantsList = asyncHandler(async (req, res) => {
   const updateData = {};
-  const allowedFields = ['name', 'description', 'restaurants', 'isActive', 'sortOrder'];
+  const allowedFields = [
+    'name',
+    'description',
+    'restaurants',
+    'isActive',
+    'sortOrder',
+    'titleImage',
+  ];
   allowedFields.forEach(field => {
     if (req.body[field] !== undefined) {
       updateData[field] = req.body[field];
