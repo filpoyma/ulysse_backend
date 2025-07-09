@@ -1,4 +1,5 @@
 import Restaurant from '../models/restaurantModel.js';
+import RestaurantsList from '../models/restaurantsListModel.js';
 import asyncHandler from 'express-async-handler';
 import ApiError from '../utils/apiError.js';
 
@@ -77,7 +78,18 @@ const updateRestaurant = asyncHandler(async (req, res) => {
 
 // Удалить ресторан
 const deleteRestaurant = asyncHandler(async (req, res) => {
-  const restaurant = await Restaurant.findByIdAndDelete(req.params.id);
+  const restaurantId = req.params.id;
+
+  // Проверяем, есть ли ресторан в каких-либо списках ресторанов
+  const restaurantsList = await RestaurantsList.findOne({
+    restaurants: { $in: [restaurantId] },
+  });
+
+  if (restaurantsList) {
+    throw new ApiError(400, `Не могу удалить ресторан, тк он в списке ${restaurantsList.name}`);
+  }
+
+  const restaurant = await Restaurant.findByIdAndDelete(restaurantId);
   if (!restaurant) throw new ApiError(404, 'Restaurant not found');
   res.status(200).json({ success: true, message: 'Restaurant deleted' });
 });

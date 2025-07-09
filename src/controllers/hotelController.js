@@ -1,4 +1,5 @@
 import Hotel from '../models/hotelModel.js';
+import HotelsList from '../models/hotelsListModel.js';
 import asyncHandler from 'express-async-handler';
 import ApiError from '../utils/apiError.js';
 
@@ -104,7 +105,21 @@ const updateMainImage = asyncHandler(async (req, res) => {
 
 // Удалить отель
 const deleteHotel = asyncHandler(async (req, res) => {
-  const hotel = await Hotel.findByIdAndDelete(req.params.id);
+  const hotelId = req.params.id;
+
+  // Проверяем, есть ли отель в каких-либо списках отелей
+  const hotelsList = await HotelsList.findOne({
+    hotels: { $in: [hotelId] },
+  });
+
+  if (hotelsList) {
+    throw new ApiError(
+      400,
+      `Не могу удалить отель, так как он используется в списке ${hotelsList.name}`,
+    );
+  }
+
+  const hotel = await Hotel.findByIdAndDelete(hotelId);
   if (!hotel) throw new ApiError(404, 'Hotel not found');
   res.status(200).json({ success: true, message: 'Hotel deleted' });
 });
