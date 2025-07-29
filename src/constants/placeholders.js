@@ -1,3 +1,5 @@
+import { transliterate } from '../utils/transliterate.js';
+
 export const newTravelProgramDefault = (name, name_eng, manager) => ({
   name,
   name_eng,
@@ -95,3 +97,15 @@ export const newMapData = {
   mapCenter: [138.46675563464663, 36.35583007420196],
   zoom: 6,
 };
+
+export const newInfoDefault = (name, title, manager) => ({
+  name: name,
+  name_eng: transliterate(name),
+  title,
+  description: 'Описание',
+  listInfo: [
+    { title: 'заголовок1', description: 'описание1' },
+    { title: 'заголовок2', description: 'описание2' },
+  ],
+  manager,
+});

@@ -8,6 +8,8 @@ import restaurantRoutes from './restaurant.routes.js';
 import countryRoutes from './countryRoutes.js';
 import mapRoutes from './mapRoutes.js';
 import restaurantsListRoutes from './restaurantsListRoutes.js';
+import infoRoutes from './infoRoutes.js';
+import referencesRoutes from './referencesRoutes.js';
 
 const router = express.Router();
 
@@ -33,5 +35,7 @@ router.use('/restaurants', restaurantRoutes);
 router.use('/countries', countryRoutes);
 router.use('/map', mapRoutes);
 router.use('/restaurants-lists', restaurantsListRoutes);
+router.use('/info', infoRoutes);
+router.use('/references', referencesRoutes);
 
 export default router;

@@ -36,6 +36,10 @@ const hotelSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    manager: {
+      type: String,
+      trim: true,
+    },
     coordinates: {
       type: [Number], // [longitude, latitude]
       validate: {

@@ -38,8 +38,7 @@ const getHotelByName = asyncHandler(async (req, res) => {
 const createHotel = asyncHandler(async (req, res) => {
   const { name, country, city, region } = req.body;
   if (!name || !country || !city) throw new ApiError(400, 'All fields are required');
-  const hotel = new Hotel({ name, country, city, region });
-  console.log('file-hotelController.js hotel:', hotel);
+  const hotel = new Hotel({ name, country, city, region, manager: req.user.email });
   await hotel.save();
   res.status(201).json({ success: true, data: hotel });
 });
