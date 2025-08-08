@@ -3,11 +3,12 @@ import { restaurantService } from '../../../services/restaurant.service';
 import { IRestaurant } from '../../../types/restaurant.types';
 import { useSelector } from 'react-redux';
 import { getErrorMessage } from '../../../utils/helpers.ts';
-import { selectAdminName, selectRestaurants } from '../../../store/selectors.ts';
+import { selectAdminEmail, selectRestaurants } from '../../../store/selectors.ts';
 import { useNavigate } from 'react-router-dom';
 
 const emptyRestaurant: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'> = {
   name: '',
+  name_eng: '',
   country: '',
   city: '',
   region: '',
@@ -26,7 +27,7 @@ const emptyRestaurant: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'> = {
 export const useRestarauntsCollect = () => {
   const navigate = useNavigate();
   const restaraunts = useSelector(selectRestaurants);
-  const userName = useSelector(selectAdminName);
+  const currentUser = useSelector(selectAdminEmail) || '';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isCreatingRestaraunt, setIsCreatingRestaraunt] = useState(false);
@@ -72,7 +73,6 @@ export const useRestarauntsCollect = () => {
     setIsCreatingRestaraunt(true);
     setNewRestaraunt({
       ...emptyRestaurant,
-      manager: userName || '',
     });
     setError(null);
   };
@@ -91,6 +91,18 @@ export const useRestarauntsCollect = () => {
       setError(null);
     } catch (err) {
       setError('Ошибка создания ресторана' + getErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCopyRestaraunt = async (id: string) => {
+    try {
+      setLoading(true);
+      await restaurantService.copy(id);
+      setError(null);
+    } catch (err) {
+      setError('Ошибка копирования ресторана' + getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -120,6 +132,7 @@ export const useRestarauntsCollect = () => {
 
   return {
     restaraunts: sortedRestaraunts,
+    currentUser,
     isCreatingRestaraunt,
     newRestaraunt,
     sortField,
@@ -134,6 +147,7 @@ export const useRestarauntsCollect = () => {
     handleSaveNewRestaraunt,
     handleCancelNewRestaraunt,
     handleRestarauntEdit,
+    handleCopyRestaraunt,
     fetchRestaraunts,
   };
 };

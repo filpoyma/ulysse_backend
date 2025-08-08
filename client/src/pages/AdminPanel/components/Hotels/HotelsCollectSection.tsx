@@ -7,6 +7,7 @@ import styles from '../../adminLayout.module.css';
 const HotelsCollectSection: FC = () => {
   const {
     hotels,
+    currentManager,
     isCreatingHotel,
     newHotel,
     sortField,
@@ -22,6 +23,7 @@ const HotelsCollectSection: FC = () => {
     handleCancelNewHotel,
     handleNavigateToHotelPage,
     handleHotelEdit,
+    handleCopyHotel,
     fetchHotels,
   } = useHotelsCollect();
 
@@ -36,12 +38,14 @@ const HotelsCollectSection: FC = () => {
       {error && <div className={styles.error}>{error}</div>}
       <HotelsCollectTable
         hotels={hotels}
+        currentManager={currentManager}
         onDeleteHotel={handleDeleteHotel}
         isCreatingHotel={isCreatingHotel}
         newHotel={newHotel}
         onNewHotelChange={handleNewHotelChange}
         onSaveNewHotel={handleSaveNewHotel}
         onCancelNewHotel={handleCancelNewHotel}
+        onCopyHotel={handleCopyHotel}
         nameInputRef={nameInputRef}
         sortField={sortField}
         sortOrder={sortOrder}

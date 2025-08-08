@@ -24,6 +24,10 @@ const HotelApi = {
     return api.post(this.getUrl(), { json: data }).json();
   },
 
+  copyHotel(id: string): Promise<{ data: IHotel }> {
+    return api.post(this.getUrl('copy'), { json: { id: id } }).json();
+  },
+
   update(id: string, data: Partial<IHotel>): Promise<{ data: IHotel }> {
     return api.put(this.getUrl(id), { json: data }).json();
   },

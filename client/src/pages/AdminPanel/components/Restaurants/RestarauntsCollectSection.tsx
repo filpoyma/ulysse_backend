@@ -8,6 +8,7 @@ import { Loader } from '../../../../components/Loader/Loader.tsx';
 const RestaurantsCollectSection = () => {
   const {
     restaraunts,
+    currentUser,
     loading,
     error,
     isCreatingRestaraunt,
@@ -23,6 +24,7 @@ const RestaurantsCollectSection = () => {
     handleCancelNewRestaraunt,
     fetchRestaraunts,
     handleRestarauntEdit,
+    handleCopyRestaraunt,
   } = useRestarauntsCollect();
 
   useEffect(() => {
@@ -42,6 +44,7 @@ const RestaurantsCollectSection = () => {
       ) : (
         <RestarauntsCollectTable
           restaraunts={restaraunts}
+          currentUser={currentUser}
           onRestarauntEdit={handleRestarauntEdit}
           onDeleteRestaraunt={handleDeleteRestaraunt}
           isCreatingRestaraunt={isCreatingRestaraunt}
@@ -49,6 +52,7 @@ const RestaurantsCollectSection = () => {
           onNewRestarauntChange={handleNewRestarauntChange}
           onSaveNewRestaraunt={handleSaveNewRestaraunt}
           onCancelNewRestaraunt={handleCancelNewRestaraunt}
+          onCopyRestaraunt={handleCopyRestaraunt}
           nameInputRef={nameInputRef}
           sortField={sortField}
           sortOrder={sortOrder}

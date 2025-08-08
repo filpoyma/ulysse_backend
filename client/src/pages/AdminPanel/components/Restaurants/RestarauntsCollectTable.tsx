@@ -5,6 +5,7 @@ import Check from '../../../../assets/icons/check.svg';
 import X from '../../../../assets/icons/x.svg';
 import Edit from '../../../../assets/icons/edit.svg';
 import Trash2 from '../../../../assets/icons/trash2.svg';
+import Copy from '../../../../assets/icons/copy.svg';
 import styles from '../../adminLayout.module.css';
 import { IRestaurant } from '../../../../types/restaurant.types.ts';
 import { CountryAutocomplete } from '../../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
@@ -12,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface Props {
   restaraunts: IRestaurant[];
+  currentUser: string;
   isCreatingRestaraunt?: boolean;
   newRestaraunt?: Partial<IRestaurant>;
   onNewRestarauntChange?: (field: keyof IRestaurant, value: string | number) => void;
@@ -20,6 +22,7 @@ interface Props {
   nameInputRef?: RefObject<HTMLInputElement>;
   onRestarauntEdit: (id: string) => void;
   onDeleteRestaraunt?: (id: string) => void;
+  onCopyRestaraunt: (id: string) => void;
   sortField?: keyof IRestaurant;
   sortOrder?: 'asc' | 'desc';
   onSort?: (field: keyof IRestaurant) => void;
@@ -27,6 +30,7 @@ interface Props {
 
 const RestarauntsCollectTable: FC<Props> = ({
   restaraunts,
+  currentUser,
   isCreatingRestaraunt = false,
   newRestaraunt = {},
   onNewRestarauntChange,
@@ -35,6 +39,7 @@ const RestarauntsCollectTable: FC<Props> = ({
   nameInputRef,
   onRestarauntEdit,
   onDeleteRestaraunt,
+  onCopyRestaraunt,
   sortField,
   sortOrder,
   onSort,
@@ -78,7 +83,7 @@ const RestarauntsCollectTable: FC<Props> = ({
               Регион
               <span className={styles.sortArrow}>{renderSortIcon('region')}</span>
             </th>
-           
+
             <th
               onClick={() => onSort && onSort('stars')}
               style={{ cursor: 'pointer', minWidth: 80 }}>
@@ -164,18 +169,20 @@ const RestarauntsCollectTable: FC<Props> = ({
               </td>
               <td>
                 <div className={styles.actions}>
-                  <button
-                    className={styles.actionButton}
-                    onClick={onSaveNewRestaraunt}
-                    title="Сохранить">
-                    <Check height={16} width={16} />
-                  </button>
-                  <button
-                    className={`${styles.actionButton} ${styles.deleteButton}`}
-                    onClick={onCancelNewRestaraunt}
-                    title="Отмена">
-                    <X height={16} width={16} />
-                  </button>
+                  <>
+                    <button
+                      className={styles.actionButton}
+                      onClick={onSaveNewRestaraunt}
+                      title="Сохранить">
+                      <Check height={16} width={16} />
+                    </button>
+                    <button
+                      className={`${styles.actionButton} ${styles.deleteButton}`}
+                      onClick={onCancelNewRestaraunt}
+                      title="Отмена">
+                      <X height={16} width={16} />
+                    </button>
+                  </>
                 </div>
               </td>
             </tr>
@@ -193,21 +200,32 @@ const RestarauntsCollectTable: FC<Props> = ({
               <td>{restaraunt.region}</td>
               <td>{restaraunt.stars}</td>
               <td>{restaraunt.manager}</td>
-              
+
               <td>
                 <div className={styles.actions}>
-                  <button
-                    className={styles.actionButton}
-                    onClick={() => restaraunt._id && onRestarauntEdit(restaraunt._id)}
-                    title="Редактировать">
-                    <Edit height={16} width={16} />
-                  </button>
-                  <button
-                    className={`${styles.actionButton} ${styles.deleteButton}`}
-                    onClick={() => restaraunt._id && onDeleteRestaraunt?.(restaraunt._id)}
-                    title="Удалить">
-                    <Trash2 height={16} width={16} />
-                  </button>
+                  {restaraunt.manager === currentUser ? (
+                    <>
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => restaraunt._id && onRestarauntEdit(restaraunt._id)}
+                        title="Редактировать">
+                        <Edit height={16} width={16} />
+                      </button>
+                      <button
+                        className={`${styles.actionButton} ${styles.deleteButton}`}
+                        onClick={() => restaraunt._id && onDeleteRestaraunt?.(restaraunt._id)}
+                        title="Удалить">
+                        <Trash2 height={16} width={16} />
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className={styles.actionButton}
+                      onClick={() => restaraunt._id && onCopyRestaraunt(restaraunt._id)}
+                      title="Копировать в свой профиль">
+                      <Copy height={16} width={16} />
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>

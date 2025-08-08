@@ -5,6 +5,7 @@ import X from '../../../../assets/icons/x.svg';
 import Edit from '../../../../assets/icons/edit.svg';
 import Check from '../../../../assets/icons/check.svg';
 import Trash2 from '../../../../assets/icons/trash2.svg';
+import Copy from '../../../../assets/icons/copy.svg';
 import styles from '../../adminLayout.module.css';
 import { IHotel } from '../../../../types/hotel.types.ts';
 import dayjs from 'dayjs';
@@ -13,11 +14,13 @@ import { SectionHeader } from '../SectionHeader.tsx';
 
 interface HotelsTableProps {
   hotels: IHotel[];
+  currentManager: string;
   onDeleteHotel: (id: string) => void;
   isCreatingHotel?: boolean;
   newHotel?: Partial<IHotel>;
   onNewHotelChange?: (field: keyof IHotel, value: string) => void;
   onSaveNewHotel?: () => void;
+  onCopyHotel: (id: string) => void;
   handleCreateHotelClick: () => void;
   handleNavigateToHotelPage: (id: string) => void;
   handleHotelEdit: (id: string) => void;
@@ -30,12 +33,14 @@ interface HotelsTableProps {
 
 const HotelsCollectTable: FC<HotelsTableProps> = ({
   hotels,
+  currentManager,
   onDeleteHotel,
   isCreatingHotel = false,
   newHotel = {},
   onNewHotelChange,
   onSaveNewHotel,
   onCancelNewHotel,
+  onCopyHotel,
   nameInputRef,
   sortField,
   sortOrder,
@@ -93,7 +98,8 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
                 style={{ cursor: 'pointer', minWidth: 120 }}>
                 Дата обновления
                 <span className={styles.sortArrow}>{renderSortIcon('updatedAt')}</span>
-              </th><th
+              </th>
+              <th
                 onClick={() => onSort && onSort('manager')}
                 style={{ cursor: 'pointer', minWidth: 120 }}>
                 Менеджер
@@ -174,18 +180,29 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
                 <td>{hotel.manager}</td>
                 <td>
                   <div className={styles.actions}>
-                    <button
-                      className={styles.actionButton}
-                      onClick={() => hotel._id && handleHotelEdit(hotel._id)}
-                      title="Редактировать">
-                      <Edit height={16} width={16} />
-                    </button>
-                    <button
-                      className={`${styles.actionButton} ${styles.deleteButton}`}
-                      onClick={() => hotel._id && onDeleteHotel(hotel._id)}
-                      title="Удалить">
-                      <Trash2 height={16} width={16} />
-                    </button>
+                    {hotel.manager === currentManager ? (
+                      <>
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => hotel._id && handleHotelEdit(hotel._id)}
+                          title="Редактировать">
+                          <Edit height={16} width={16} />
+                        </button>
+                        <button
+                          className={`${styles.actionButton} ${styles.deleteButton}`}
+                          onClick={() => hotel._id && onDeleteHotel(hotel._id)}
+                          title="Удалить">
+                          <Trash2 height={16} width={16} />
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        className={`${styles.actionButton} ${styles.deleteButton}`}
+                        onClick={() => hotel._id && onCopyHotel(hotel._id)}
+                        title="Копировать в свой профиль">
+                        <Copy height={16} width={16} />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>

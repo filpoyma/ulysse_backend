@@ -26,6 +26,10 @@ const RestaurantApi = {
     return api.post(this.getUrl(), { json: data }).json();
   },
 
+  copy(id: string): Promise<{ data: IRestaurant }> {
+    return api.post(this.getUrl('copy'), { json: { id } }).json();
+  },
+
   update(id: string, data: Partial<IRestaurant>): Promise<{ data: IRestaurant }> {
     return api.put(this.getUrl(id), { json: data }).json();
   },

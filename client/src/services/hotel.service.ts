@@ -18,6 +18,10 @@ export const hotelService = {
   async create(data: IHotelCreate) {
     return HotelApi.create(data);
   },
+  async copyHotel(id: string) {
+    const res = await HotelApi.copyHotel(id);
+    store.dispatch(hotelActions.addHotel(res.data));
+  },
   async update(id: string, data: Partial<IHotel>) {
     const res = await HotelApi.update(id, data);
     store.dispatch(hotelActions.updateHotel(res.data));

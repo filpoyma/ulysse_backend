@@ -21,6 +21,11 @@ export const restaurantService = {
     const res = await RestaurantApi.create(data);
     store.dispatch(restaurantActions.addRestaurant(res.data));
   },
+
+  async copy(id: string) {
+    const res = await RestaurantApi.copy(id);
+    store.dispatch(restaurantActions.addRestaurant(res.data));
+  },
   async update(id: string, data: Partial<IRestaurant>) {
     const res = await RestaurantApi.update(id, data);
     store.dispatch(restaurantActions.updateRestaurant(res.data));

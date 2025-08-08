@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { hotelService } from '../../../services/hotel.service';
 import { hotelActions } from '../../../store/reducers/hotel';
 import { IHotel, IHotelCreate } from '../../../types/hotel.types.ts';
-import { selectHotels } from '../../../store/selectors.ts';
+import { selectAdminEmail, selectHotels } from '../../../store/selectors.ts';
 import { useNavigate } from 'react-router-dom';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 
@@ -19,6 +19,7 @@ export const useHotelsCollect = () => {
   const navigate = useNavigate();
 
   const hotels = useSelector(selectHotels);
+  const currentManager = useSelector(selectAdminEmail) || '';
   const [isCreatingHotel, setIsCreatingHotel] = useState(false);
   const [newHotel, setNewHotel] = useState<IHotelCreate>(defaultHotel);
   const [editingHotelId, setEditingHotelId] = useState<string | null>(null);
@@ -149,6 +150,16 @@ export const useHotelsCollect = () => {
     }
   };
 
+  const handleCopyHotel = async (id: string) => {
+    try {
+      setError(null);
+      await hotelService.copyHotel(id);
+    } catch (err) {
+      setError(`Ошибка при копировании отеля: ${getErrorMessage(err)}`);
+      console.error('Error copy hotel:', err);
+    }
+  };
+
   const handleCancelNewHotel = () => {
     setIsCreatingHotel(false);
     setError(null);
@@ -161,6 +172,7 @@ export const useHotelsCollect = () => {
 
   return {
     hotels: sortedHotels,
+    currentManager,
     isCreatingHotel,
     newHotel,
     editingHotelId,
@@ -182,6 +194,7 @@ export const useHotelsCollect = () => {
     handleCancelNewHotel,
     handleNavigateToHotelPage,
     handleHotelEdit,
+    handleCopyHotel,
     fetchHotels,
   };
 };

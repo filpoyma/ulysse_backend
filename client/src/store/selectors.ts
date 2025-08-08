@@ -3,6 +3,7 @@ import { RootState } from '../store';
 export const selectIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
 export const selectIsLoading = (state: RootState) => state.auth.isLoading;
 export const selectAdminName = (state: RootState) => state.auth.user?.name;
+export const selectAdminEmail = (state: RootState) => state.auth.user?.email;
 
 export const selectCountries = (state: RootState) => state.countries.data;
 
