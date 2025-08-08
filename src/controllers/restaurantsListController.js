@@ -5,9 +5,27 @@ import ApiError from '../utils/apiError.js';
 // Получить все списки ресторанов
 const getAllRestaurantsLists = asyncHandler(async (req, res) => {
   const withRestaurants = req.query.withRestaurants === 'true';
-  const lists = withRestaurants
+  const currentManager = req.user?.email; // Получаем текущего менеджера из JWT токена
+
+  let lists = withRestaurants
     ? await RestaurantsList.findWithRestaurants()
     : await RestaurantsList.find();
+
+  // Сортируем списки так, чтобы текущий менеджер был вверху
+  if (currentManager) {
+    lists = lists.sort((a, b) => {
+      const aIsCurrentManager = a.manager === currentManager;
+      const bIsCurrentManager = b.manager === currentManager;
+
+      // Текущий менеджер всегда вверху
+      if (aIsCurrentManager && !bIsCurrentManager) return -1;
+      if (!aIsCurrentManager && bIsCurrentManager) return 1;
+
+      // Если оба имеют одинаковый статус менеджера, сортируем по дате обновления (новые сверху)
+      return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+    });
+  }
+
   res.status(200).json({ success: true, data: lists });
 });
 
@@ -55,8 +73,28 @@ const getRestaurantsListById = asyncHandler(async (req, res) => {
 const createRestaurantsList = asyncHandler(async (req, res) => {
   const { name, description, restaurants, sortOrder } = req.body;
   if (!name) throw new ApiError(400, 'Name is required');
-  const list = await RestaurantsList.create({ name, description, restaurants, sortOrder });
+  const list = await RestaurantsList.create({
+    name,
+    manager: req.user.email,
+    description,
+    restaurants,
+    sortOrder,
+  });
   res.status(201).json({ success: true, data: list });
+});
+
+// Копировать список ресторанов
+const copyRestaurantsList = asyncHandler(async (req, res) => {
+  const { id } = req.body;
+  const restaurantsList = await RestaurantsList.findById(id).select({ _id: 0 }).lean();
+  if (!restaurantsList) throw new ApiError(404, 'Hotel did not find');
+  const restaurantsListCopy = new RestaurantsList({
+    ...restaurantsList,
+    name: restaurantsList.name + '_copy',
+    manager: req.user.email,
+  });
+  await restaurantsListCopy.save();
+  res.status(201).json({ success: true, data: restaurantsListCopy });
 });
 
 // Обновить список ресторанов
@@ -116,4 +154,5 @@ export default {
   deleteRestaurantsList,
   addRestaurantToList,
   removeRestaurantFromList,
+  copyRestaurantsList,
 };

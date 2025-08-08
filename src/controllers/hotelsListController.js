@@ -42,10 +42,12 @@ const getHotelsListById = asyncHandler(async (req, res) => {
           select: 'path filename',
         };
 
-  const hotelsList = await HotelsList.findById(id).populate({
-    path: ['hotels'],
-    populate: populateQuery,
-  }).populate({path: 'titleImage', select: 'path filename'});
+  const hotelsList = await HotelsList.findById(id)
+    .populate({
+      path: ['hotels'],
+      populate: populateQuery,
+    })
+    .populate({ path: 'titleImage', select: 'path filename' });
 
   if (!hotelsList) throw new ApiError(404, 'Список отелей не найден');
 
@@ -73,6 +75,7 @@ const createHotelsList = asyncHandler(async (req, res) => {
 
   const hotelsList = await HotelsList.create({
     name,
+    manager: req.user.email,
     description,
     hotels: hotels || [],
     sortOrder: sortOrder || 0,
@@ -82,6 +85,20 @@ const createHotelsList = asyncHandler(async (req, res) => {
     success: true,
     data: hotelsList,
   });
+});
+
+// Создать новый список отелей
+const copyHotelsList = asyncHandler(async (req, res) => {
+  const { id } = req.body;
+  const hotelList = await HotelsList.findById(id).select({ _id: 0 }).lean();
+  if (!hotelList) throw new ApiError(404, 'Hotel did not find');
+  const hotelListCopy = new HotelsList({
+    ...hotelList,
+    name: hotelList.name + '_copy',
+    manager: req.user.email,
+  });
+  await hotelListCopy.save();
+  res.status(201).json({ success: true, data: hotelListCopy });
 });
 
 // Обновить список отелей
@@ -260,4 +277,5 @@ export default {
   removeHotelFromList,
   getHotelsListsStats,
   removeHotelFromLists,
+  copyHotelsList,
 };

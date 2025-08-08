@@ -16,6 +16,7 @@ router.use(protect);
 //router.use(admin);
 
 router.post('/', hotelsListController.createHotelsList);
+router.post('/copy', hotelsListController.copyHotelsList);
 router.patch('/:id', hotelsListController.updateHotelsList);
 router.delete('/:id', hotelsListController.deleteHotelsList);
 

@@ -5,13 +5,16 @@ import { protect } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // Получить все списки ресторанов
-router.get('/', restaurantsListController.getAllRestaurantsLists);
+router.get('/', protect, restaurantsListController.getAllRestaurantsLists);
 
 // Получить один список ресторанов по id
 router.get('/:id', restaurantsListController.getRestaurantsListById);
 
 // Создать список ресторанов
 router.post('/', protect, restaurantsListController.createRestaurantsList);
+
+// Копировать список ресторанов
+router.post('/copy', protect, restaurantsListController.copyRestaurantsList);
 
 // Обновить список ресторанов
 router.patch('/:id', protect, restaurantsListController.updateRestaurantsList);
@@ -20,9 +23,17 @@ router.patch('/:id', protect, restaurantsListController.updateRestaurantsList);
 router.delete('/:id', protect, restaurantsListController.deleteRestaurantsList);
 
 // Добавить ресторан в список
-router.post('/:listId/restaurants/:restaurantId', protect, restaurantsListController.addRestaurantToList);
+router.post(
+  '/:listId/restaurants/:restaurantId',
+  protect,
+  restaurantsListController.addRestaurantToList,
+);
 
 // Удалить ресторан из списка
-router.delete('/:listId/restaurants/:restaurantId', protect, restaurantsListController.removeRestaurantFromList);
+router.delete(
+  '/:listId/restaurants/:restaurantId',
+  protect,
+  restaurantsListController.removeRestaurantFromList,
+);
 
-export default router; 
+export default router;

@@ -13,6 +13,10 @@ const hotelsListSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    manager: {
+      type: String,
+      trim: true,
+    },
     hotels: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -89,7 +93,7 @@ hotelsListSchema.statics.findWithHotels = function (query = {}) {
   return this.find(query)
     .populate({
       path: ['hotels'],
-      select: 'name country region mainImage coordinates',
+      select: 'name country region mainImage coordinates manager',
       populate: {
         path: 'mainImage',
         select: 'path filename',

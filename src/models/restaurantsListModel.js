@@ -13,6 +13,10 @@ const restaurantsListSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    manager: {
+      type: String,
+      trim: true,
+    },
     restaurants: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -76,6 +80,20 @@ restaurantsListSchema.methods.containsRestaurant = function (restaurantId) {
 
 restaurantsListSchema.statics.findActive = function () {
   return this.find({ isActive: true }).sort({ sortOrder: 1, createdAt: -1 });
+};
+
+restaurantsListSchema.statics.findWithRestaurants = function (query = {}) {
+  return this.find(query)
+    .populate({
+      path: 'restaurants',
+      select: 'name country region mainImage coordinates manager',
+      populate: {
+        path: 'mainImage',
+        select: 'path filename',
+      },
+    })
+    .populate({ path: 'titleImage', select: 'path filename' })
+    .sort({ sortOrder: 1, createdAt: -1 });
 };
 
 const RestaurantsList = mongoose.model('RestaurantsList', restaurantsListSchema);
