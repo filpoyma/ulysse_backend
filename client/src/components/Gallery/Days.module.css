@@ -1,0 +1,116 @@
+.content {
+  width: 100%;
+  height: calc(100vh - 80px);
+  background-color: var(--background-color);
+  padding: 20px;
+}
+
+.addImagesButton {
+  margin-bottom: 20px;
+}
+
+.scrollableGallery {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Стилизация скроллбара для Chrome, Safari и Opera */
+.scrollableGallery::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scrollableGallery::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.scrollableGallery::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+}
+
+.scrollableGallery::-webkit-scrollbar-thumb:hover {
+  background-color: #9c7d4f;
+}
+
+.imageWrapper {
+  position: relative;
+  flex: 0 0 150px;
+}
+
+.scrollableImage {
+  height: 150px;
+  width: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.scrollableImage:hover {
+  transform: scale(1.02);
+}
+
+.deleteButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.75);
+  border: none;
+  border-radius: 50%;
+  color: #dc3545;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.imageWrapper:hover .deleteButton {
+  opacity: 1;
+}
+
+.deleteButton:hover {
+  background-color: white;
+}
+
+.addImagePlaceholder {
+  flex: 0 0 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #666;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #ccc;
+}
+
+.addImagePlaceholder:hover {
+  background-color: #f0f0f0;
+}
+
+.addImagePlaceholder::before {
+  content: '+';
+  font-size: 2rem;
+  margin-right: 0.5rem;
+  color: inherit;
+  transition: transform 0.3s ease;
+}
+
+.addImagePlaceholder:hover::before {
+  transform: scale(1.2);
+}

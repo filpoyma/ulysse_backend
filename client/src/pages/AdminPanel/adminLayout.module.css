@@ -1,0 +1,392 @@
+.container {
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.75rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.createButton:hover {
+  background-color: var(--secondary-color);
+}
+
+.error {
+  background-color: #fee2e2;
+  border: 1px solid #ef4444;
+  color: #b91c1c;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.tableWrapper {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  width: 100%;
+margin-top: 24px;
+  padding: 0.8rem 0.5rem;
+}
+
+.table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.table th,
+.table td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.table th {
+  background-color: var(--table-header-bg);
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.programName {
+  color: var(--accent-color);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.programName:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: var(--table-header-bg);
+}
+
+.actionButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.actionButton:disabled:hover {
+  background-color: transparent;
+}
+
+.actionButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.deleteButton {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+  color: #ef4444;
+  background-color: var(--table-header-bg);
+}
+
+.nav {
+  background: var(--header-bg);
+  padding: 1.5rem 2rem;
+  margin: -2rem -2rem 2rem -2rem;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.navItem {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-family: 'Guild A Banner', sans-serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: all 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  line-height: 1;
+}
+
+.navItem:hover {
+  color: white;
+}
+
+.navItem.active {
+  color: white;
+}
+
+.navItem.active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  transform: scaleX(1);
+  transition: transform 0.3s ease;
+}
+
+.navItem:not(.active)::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.navItem:hover::after {
+  transform: scaleX(1);
+}
+
+.dropdownContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dropdownContainer button {
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  line-height: 1;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background-color: var(--header-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 10;
+  margin-top: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+.dropdownMenuVisible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s;
+  font-family: 'Guild A Banner', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dropdownItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.dropdownItem.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: auto;
+}
+
+.logoutButton:hover {
+  color: white;
+  border-color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hotelCreateRow {
+  background: #f7f5f2;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(191, 161, 107, 0.06);
+}
+
+.hotelCreateInput {
+  border: 1.5px solid #e0d7c6;
+  background: #fff;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  color: #3d2e13;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.hotelCreateInput:focus {
+  border: 1.5px solid #bfa16b;
+  box-shadow: 0 0 0 2px rgba(191, 161, 107, 0.10);
+  outline: none;
+}
+
+.hotelCreateRow input,
+.hotelCreateInput {
+  width: 100%;
+  min-width: 80px;
+  box-sizing: border-box;
+}
+
+.sortArrow {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 2px;
+  line-height: 1;
+  font-size: 0.9em;
+}
+
+.saveBtnContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.saveButton {
+  padding: 0.75rem 2rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.saveButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.saveButton:hover:not(:disabled) {
+  background-color: var(--secondary-color);
+}
+
+.backButton {
+  padding: 0.6rem 1.5rem;
+  background: none;
+  color: var(--primary-color);
+  border: 1.5px solid var(--primary-color);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 1rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.backButton:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.tablesRow {
+ display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.nav a {
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  line-height: 1;
+}

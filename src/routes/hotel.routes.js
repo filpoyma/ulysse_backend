@@ -11,6 +11,8 @@ router.get('/:id', hotelController.getHotelById);
 router.get('/name/:name', hotelController.getHotelByName);
 // Создать отель
 router.post('/', protect, hotelController.createHotel);
+// Копировать отель
+router.post('/copy', protect, hotelController.copyHotel);
 // Обновить отель
 router.put('/:id', protect, hotelController.updateHotel);
 

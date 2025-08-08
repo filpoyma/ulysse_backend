@@ -1,0 +1,32 @@
+.notFoundWrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f5eee8;
+}
+
+.notFoundImage {
+  max-width: 400px;
+  border-radius: 16px;
+  margin-bottom: 32px;
+}
+
+.notFoundTitle {
+  font-size: 48px;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.notFoundSubtitle {
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.notFoundText {
+  color: #888;
+  font-size: 18px;
+  text-align: center;
+  max-width: 400px;
+} 

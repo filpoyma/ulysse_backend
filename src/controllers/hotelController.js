@@ -43,6 +43,16 @@ const createHotel = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, data: hotel });
 });
 
+// Копировать отель
+const copyHotel = asyncHandler(async (req, res) => {
+  const { id } = req.body;
+  const hotel = await Hotel.findById(id).select({ _id: 0 }).lean();
+  if (!hotel) throw new ApiError(404, 'Hotel did not find');
+  const hotelCopy = new Hotel({ ...hotel, name: hotel.name + '_copy', manager: req.user.email });
+  await hotelCopy.save();
+  res.status(201).json({ success: true, data: hotelCopy });
+});
+
 // Обновить отель
 const updateHotel = asyncHandler(async (req, res) => {
   const updateData = {};
@@ -174,4 +184,5 @@ export default {
   updateMainImage,
   updateGallery,
   getHotelByName,
+  copyHotel,
 };

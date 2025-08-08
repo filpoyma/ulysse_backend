@@ -1,0 +1,486 @@
+/* Общие стили для всех таблиц */
+.details-table {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  /*border-radius: 8px;*/
+  background: transparent;
+  overflow-x: auto;
+  position: relative;
+  border-top: none;
+}
+
+.details-header {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  /*border-radius: 8px;*/
+  background: transparent;
+  overflow-x: auto;
+  position: relative;
+}
+
+.details-table .accommodation-table {
+  border-top: none;
+}
+
+.table-header {
+  display: grid;
+  /*border-bottom: 1px solid var(--border-color);*/
+  background-color: var(--table-header-bg);
+  min-width: min-content;
+}
+
+.header-cell {
+  padding: 1rem 1.5rem;
+  font-weight: 500;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.table-row {
+  display: grid;
+  border-bottom: 1px solid var(--border-color);
+  min-width: min-content;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.activities-cell {
+  padding: 1.5rem;
+  border-right: 1px solid var(--border-color);
+  background: transparent;
+}
+
+.activities-cell:last-child {
+  border-right: none;
+}
+
+/* Стили для OverviewTable */
+.overview-table .table-header,
+.overview-table .table-row {
+  grid-template-columns: minmax(150px, 20%) minmax(200px, 80%);
+  position: relative;
+}
+
+.overview-table .activity-item {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  color: var(--primary-color);
+}
+
+.overview-table .activity-icon {
+  flex-shrink: 0;
+  color: #666;
+}
+
+.overview-table .activity-details {
+  flex: 1;
+  font-size: 0.94rem;
+  color: var(--table-text-color);
+}
+
+.overview-table .more-text {
+  display: inline-block;
+  transition: color 0.2s ease;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.overview-table .more-text:hover {
+  color: var(--secondary-color);
+}
+
+.overview-table .more-details {
+  margin-top: 0.5rem;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-in-out;
+}
+
+.overview-table .more-details.expanded {
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Стили для инпутов при редактировании OverviewTable */
+.overview-table .editable-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.94rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+  margin-bottom: 3px;
+}
+
+.overview-table .editable-input:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+/* Стили для иконок редактирования */
+.edit-icons {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.edit-icons-add-new-row {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  z-index: 1;
+}
+
+.edit-icon {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.del-icon {
+  color: orangered;
+  border: 1px solid orangered;
+}
+
+.edit-icon:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.del-icon:hover {
+  background-color: orangered;
+  border-color: orangered;
+  color: white;
+}
+
+.edit-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Стили для FlightsTable */
+.flights-table .table-header,
+.flights-table .table-row {
+  grid-template-columns: minmax(150px, 20%) 1fr;
+}
+
+.flights-table .activities-cell {
+  padding: 1.5rem;
+  border-right: 1px solid var(--border-color);
+  background: transparent;
+  width: 100%;
+}
+
+.flights-table .activity-item {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  color: var(--primary-color);
+  width: 100%;
+}
+
+.flights-table .activity-icon {
+  flex-shrink: 0;
+  color: #666;
+}
+
+.flights-table .activity-details {
+  flex: 1;
+  font-size: 0.94rem;
+  color: var(--table-text-color);
+  width: 100%;
+}
+
+.flights-table .activity-details > div {
+  margin-bottom: 0.25rem;
+}
+
+.flights-table .activity-subtext {
+  margin-top: 0.5rem;
+}
+
+.flights-table .more-text {
+  display: inline-block;
+  transition: color 0.2s ease;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.flights-table .more-text:hover {
+  color: var(--secondary-color);
+}
+
+.flights-table .more-details {
+  margin-top: 0.5rem;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-in-out;
+}
+
+.flights-table .more-details.expanded {
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Стили для AccommodationTable */
+.accommodation-table .table-header,
+.accommodation-table .table-row {
+  grid-template-columns: minmax(70px, 20%) minmax(150px, 80%) minmax(150px, 20%) minmax(80px, 10%);
+}
+
+.accommodation-table .activities-cell {
+  padding: 1.5rem;
+  border-right: 1px solid var(--border-color);
+  background: transparent;
+}
+
+.accommodation-table .activity-item {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  color: var(--primary-color);
+}
+
+.accommodation-table .activity-details {
+  flex: 1;
+  font-size: 0.94rem;
+  color: var(--table-text-color);
+}
+
+.accommodation-table .table-row {
+  display: grid;
+  width: 100%;
+}
+
+.accommodation-table .table-row > div {
+  border-right: 1px solid var(--border-color);
+  padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.accommodation-table .table-row > div:last-child {
+  border-right: none;
+  text-align: center;
+}
+
+.accommodation-table .table-row > div:first-child {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 100%;
+  color: var(--table-title-text-color);
+}
+
+.accommodation-table .table-row > div:not(:first-child) {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 100%;
+  color: var(--table-text-color);
+}
+
+.accommodation-table .editable-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.94rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+}
+
+/* Обновляем медиа-запросы */
+@media (max-width: 1024px) {
+  .flights-table .table-header,
+  .flights-table .table-row {
+    grid-template-columns: minmax(120px, 20%) 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .flights-table .table-header,
+  .flights-table .table-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Стили для кнопки добавления новой строки */
+.add-row-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 16px;
+  color: white;
+  cursor: pointer;
+  margin: 1rem auto;
+  transition: all 0.2s ease;
+}
+
+.add-row-button:hover {
+  transform: scale(1.1);
+  background-color: var(--primary-color);
+}
+
+/* Стили для текстового поля дополнительной информации */
+.editable-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.94rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+  resize: vertical;
+  min-height: 100px;
+  margin-top: 0.5rem;
+}
+
+.editable-textarea:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+/* Стили для выпадающего списка иконок */
+.icon-selector {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  height: 28px;
+}
+
+.icon-button {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.icon-button:hover {
+  background-color: var(--hover-color);
+}
+
+.icon-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
+}
+
+.icon-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.icon-option:hover {
+  background-color: var(--hover-color);
+}
+
+.icon-option span {
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.move-buttons {
+  display: flex;
+  gap: 2px;
+}
+
+.move-icon {
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+}
+
+.move-icon:hover:not(:disabled) {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.move-icon:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.move-icon:disabled:hover {
+  background-color: var(--input-bg);
+  border-color: var(--border-color);
+  color: var(--primary-color);
+}
+
+.disabled-icon {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #999;
+  border-color: #ccc;
+}
+
+.disabled-icon:hover {
+  background-color: var(--input-bg);
+  border-color: #ccc;
+  color: #999;
+}
+
+/* Стили для поля даты */
+.day-cell input[type="date"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.day-cell input[type="date"]:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.day-cell input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.day-cell input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}

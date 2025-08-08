@@ -1,0 +1,354 @@
+.container {
+  min-height: 90vh;
+  width: 100%;
+  background:inherit;
+  margin-bottom: 24px;
+}
+
+.header {
+  display: flex;
+  text-align: center;
+  font-family: 'Guild A Banner', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 26px;
+  color: var(--table-title-text-color);
+
+  border-bottom: 1px solid var(--table-text-color);
+  padding-bottom: 24px;
+  padding-top: 24px;
+  margin-left: 8px;
+  margin-right: 8px;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--background-color);
+}
+
+.content {
+padding-top: 42px;
+  padding-left: 84px;
+  padding-right: 108px;
+}
+
+.title {
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 100%;
+
+}
+
+.night {
+  border-left: 4px solid rgba(44, 42, 41, 0.2);
+  height: 26px;
+  margin-top: 12px;
+;
+}
+
+.night p {
+padding-left: 10px;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+
+}
+
+.description a{
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--text-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.description {
+  margin-top: 31px;
+  margin-bottom: 5px;
+
+}
+
+.infoContainer {
+  margin-top: 60px;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  gap: 20px
+
+}
+.content ul {
+ padding-left: 72px;
+  padding-top: 14px;
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 18px;
+
+
+}
+
+/* Стили для блока расписания дня */
+.scheduleBlock {
+  margin-top: 48px;
+  padding-left: 54px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.scheduleItem {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  margin-left: 24px;
+}
+
+.scheduleItem::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border: 2px solid rgba(44, 42, 41, 0.2);
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: 9px;
+  z-index: 1;
+}
+
+.scheduleTime {
+  min-width: 80px;
+  font-family: Inter, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2C2A29;
+  margin-right: 24px;
+  margin-top: 2px;
+}
+
+.scheduleTitle {
+  font-family: Inter;
+  font-weight: 700;
+  font-size: 19px;
+
+
+  color: var(--table-title-text-color);
+  margin-bottom: 4px;
+  margin-left: 24px;
+}
+
+.scheduleDesc {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--text-color);
+  margin-bottom: 2px;
+  margin-left: 24px;
+}
+
+/* Стили для редактирования */
+.editable-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.94rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+  margin-bottom: 3px;
+  font-family: inherit;
+}
+
+.editable-input:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.editable-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.94rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+  margin-bottom: 3px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 60px;
+}
+
+.editable-textarea:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.edit-controls {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 84px 20px 108px;
+}
+
+.edit-icons {
+  display: flex;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.edit-icon {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.del-icon {
+  color: orangered;
+  border: 1px solid orangered;
+}
+
+.edit-icon:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.del-icon:hover {
+  background-color: orangered;
+  border-color: orangered;
+  color: white;
+}
+
+.edit-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.add-item-btn {
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-item-btn:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.remove-item-btn {
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  border-radius: 4px;
+  background-color: #ffebee;
+  border: 1px solid #f44336;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f44336;
+  flex-shrink: 0;
+}
+
+.remove-item-btn:hover {
+  background-color: #f44336;
+  border-color: #f44336;
+  color: white;
+}
+
+.edit-item-btn {
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.edit-item-btn:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.add-schedule-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+  width: 60%
+}
+
+.add-schedule-btn:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.add-day-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.add-day-btn {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.add-day-btn:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

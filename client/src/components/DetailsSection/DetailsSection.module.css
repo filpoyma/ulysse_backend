@@ -1,0 +1,35 @@
+.contentSection {
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.contentWrapper {
+  flex: 1;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  position: sticky;
+  top: 0;
+  background-color: var(--background-color);
+  z-index: 100;
+}
+
+.detailsTitle {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  padding-top: 8px;
+  color: var(--primary-color);
+}
+
+@media (max-width: 1024px) {
+  .contentWrapper {
+    padding: 2rem 1rem;
+  }
+}

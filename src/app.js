@@ -19,6 +19,7 @@ const app = express();
 // Get directory name
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const dirname = path.resolve();
 
 // Cookie parser
 app.use(cookieParser());
@@ -34,7 +35,11 @@ app.use('/upload', express.static(path.join(__dirname, '../upload')));
 app.use(mongoSanitize());
 
 // Set security HTTP headers
-app.use(helmet());
+app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    })
+);
 
 // CORS
 app.use(cors({
@@ -44,9 +49,11 @@ app.use(cors({
 console.log('config.frontendHost', config.frontendHost);
 
 // Request logging
-if (config.isDevelopment) {
-  app.use(morgan('dev'));
-}
+// if (config.isDevelopment) {
+//   app.use(morgan('dev'));
+// }
+
+app.use(morgan('dev'));
 
 // Apply rate limiting
 // const limiter = rateLimit({
@@ -65,9 +72,12 @@ app.use(compression());
 // Mount API routes
 app.use('/api/v1', routes);
 
-// Base route
-app.get('/', (req, res) => {
-  res.send('API is running...');
+// Serve static files from client/dist
+app.use(express.static(path.join(dirname, "client", "dist")));
+
+// Serve index.html for all non-API routes (SPA routing)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(dirname, "client", "dist", "index.html"));
 });
 
 // Error handling middleware

@@ -1,0 +1,109 @@
+:root {
+  --modal-accent: #bfa16b;
+  --modal-accent-dark: #a88c4a;
+  --modal-bg: #f7f5f2;
+  --modal-border: #e0d7c6;
+  --modal-text: #3d2e13;
+}
+
+.create-template-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.18);
+  z-index: 2100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-template-modal-content {
+  background: var(--modal-bg);
+  padding: 32px 40px;
+  border-radius: 16px;
+  min-width: 340px;
+  box-shadow: 0 8px 32px rgba(191, 161, 107, 0.10);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1.5px solid var(--modal-border);
+}
+
+.create-template-modal-content h3 {
+  color: var(--modal-text);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.create-template-modal-content input[type='text'] {
+  width: 100%;
+  margin: 16px 0;
+  padding: 10px 16px;
+  font-size: 1.1rem;
+  border: 1.5px solid var(--modal-border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--modal-text);
+  font-family: inherit;
+  transition: border 0.2s;
+}
+
+.create-template-modal-content input[type='text']:focus {
+  border: 1.5px solid var(--modal-accent);
+  outline: none;
+}
+
+.modal-btn {
+  padding: 0.7rem 2.2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Guild A Banner', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  margin-left: 8px;
+  margin-right: 0;
+  border: none;
+  box-shadow: 0 2px 8px rgba(191, 161, 107, 0.08);
+}
+
+.modal-btn:first-child {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+.modal-btn:not(:disabled):hover,
+.modal-btn:not(:disabled):focus {
+  box-shadow: 0 4px 16px rgba(191, 161, 107, 0.15);
+  opacity: 0.95;
+}
+
+.modal-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Акцентная кнопка (Создать) */
+.modal-btn:last-child {
+  background: linear-gradient(90deg, var(--modal-accent) 0%, var(--modal-accent-dark) 100%);
+  color: #fff;
+}
+
+/* Вторичная кнопка (Отмена) */
+.modal-btn:first-child {
+  background: #fff;
+  color: var(--modal-accent-dark);
+  border: 1.5px solid var(--modal-border);
+}
+
+.modal-btn:first-child:hover,
+.modal-btn:first-child:focus {
+  background: var(--modal-accent);
+  color: #fff;
+  border-color: var(--modal-accent);
+} 

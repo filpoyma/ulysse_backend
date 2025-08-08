@@ -61,6 +61,18 @@ const uploadMultiplyImage = async (req, res) => {
   }
 };
 
+const imageService = {
+  async copy(id, belongsTo) {
+    try {
+      const images = await Image.findById(id).select({ _id: 0 }).lean();
+      const copyImage = new Image({ ...images, belongsTo });
+      await copyImage.save();
+    } catch (err) {
+      console.error(err);
+    }
+  },
+};
+
 const getAllImages = async (req, res) => {
   try {
     const belongsToId = req.query.id;
@@ -161,4 +173,5 @@ export default {
   getImagesByBelongId,
   deleteImage,
   upload,
+  imageService,
 };

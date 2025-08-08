@@ -1,0 +1,135 @@
+.contentSection {
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.contentWrapper {
+  flex: 1;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.heroContent {
+  display: flex;
+  align-items: center;
+  padding-top: 225px;
+}
+
+.heroText {
+  text-align: center;
+  width: 100%;
+}
+
+.heroSubtitle {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 80%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-family: 'Guild A Banner', sans-serif;
+  font-weight: 500;
+  font-size: 80px;
+  line-height: 110%;
+  text-transform: uppercase;
+  color: #2C2A29;
+  margin-bottom: 2rem;
+}
+
+.scrollContainer {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ctaText {
+  font-family: 'Guild A Banner', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--primary-color);
+}
+
+.scrollButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--primary-color);
+  transition: transform 0.3s ease;
+}
+
+.scrollButton:hover {
+  transform: translateY(4px);
+}
+
+.editable {
+  width: 100%;
+  text-align: center;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.editButtons {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  justify-content: center;
+}
+
+.saveButton,
+.cancelButton {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  padding: 3px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.saveButton {
+  border: 1px solid var(--border-color);
+}
+
+.saveButton:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+
+.cancelButton:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.saveButton:disabled,
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+  .contentWrapper {
+    padding: 2rem 1rem;
+  }
+}

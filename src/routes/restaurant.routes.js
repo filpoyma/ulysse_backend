@@ -10,6 +10,9 @@ router.get('/', restaurantController.getAllRestaurants);
 // Создать ресторан
 router.post('/', protect, restaurantController.createRestaurant);
 
+// Копировать ресторан
+router.post('/copy', protect, restaurantController.copyRestaurant);
+
 // Обновить главное изображение ресторана
 router.put('/update-title-image', protect, restaurantController.updateTitleImage);
 

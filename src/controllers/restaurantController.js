@@ -2,10 +2,12 @@ import Restaurant from '../models/restaurantModel.js';
 import RestaurantsList from '../models/restaurantsListModel.js';
 import asyncHandler from 'express-async-handler';
 import ApiError from '../utils/apiError.js';
+import uploadController from '../controllers/uploadController.js';
 
 // Получить все рестораны
 const getAllRestaurants = asyncHandler(async (req, res) => {
   const restaurants = await Restaurant.find({}).populate(['gallery', 'titleImage']).lean();
+  console.log('file-restaurantController.js restaurants:', restaurants);
   res.status(200).json({ success: true, data: restaurants });
 });
 
@@ -30,13 +32,35 @@ const getRestaurantByName = asyncHandler(async (req, res) => {
 
 // Создать ресторан
 const createRestaurant = asyncHandler(async (req, res) => {
-  const { name, country, city, region, manager, stars } = req.body;
-  if (!name || !country || !city || !manager || !stars) {
+  const { name, country, city, region, stars } = req.body;
+  if (!name || !country || !city || !stars) {
     throw new ApiError(400, 'All fields are required');
   }
-  const restaurant = new Restaurant({ name, country, city, region, manager, stars });
+  const restaurant = new Restaurant({
+    name,
+    country,
+    city,
+    region,
+    manager: req.user.email,
+    stars,
+  });
   await restaurant.save();
   res.status(201).json({ success: true, data: restaurant });
+});
+
+// Копировать ресторан
+const copyRestaurant = asyncHandler(async (req, res) => {
+  const { id } = req.body;
+  const restaurant = await Restaurant.findById(id).select({ _id: 0 }).lean();
+  if (!restaurant) throw new ApiError(404, 'restaurant did not find');
+  const restaurantCopy = new Restaurant({
+    ...restaurant,
+    name: restaurant.name + '_copy',
+    manager: req.user.email,
+  });
+  await restaurantCopy.save();
+  await uploadController.imageService.copy(restaurant.gallery._id, restaurantCopy._id);
+  res.status(201).json({ success: true, data: restaurantCopy });
 });
 
 // Обновить ресторан
@@ -79,16 +103,16 @@ const updateRestaurant = asyncHandler(async (req, res) => {
 // Удалить ресторан
 const deleteRestaurant = asyncHandler(async (req, res) => {
   const restaurantId = req.params.id;
-  
+
   // Проверяем, есть ли ресторан в каких-либо списках ресторанов
   const restaurantsList = await RestaurantsList.findOne({
     restaurants: { $in: [restaurantId] },
   });
-  
+
   if (restaurantsList) {
     throw new ApiError(400, `Не могу удалить ресторан, тк он в списке ${restaurantsList.name}`);
   }
-  
+
   const restaurant = await Restaurant.findByIdAndDelete(restaurantId);
   if (!restaurant) throw new ApiError(404, 'Restaurant not found');
   res.status(200).json({ success: true, message: 'Restaurant deleted' });
@@ -160,4 +184,5 @@ export default {
   updateTitleImage,
   updateGallery,
   getRestaurantByName,
+  copyRestaurant,
 };

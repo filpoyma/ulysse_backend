@@ -1,0 +1,45 @@
+:root {
+    --primary-color: #333333;
+    --secondary-color: #4a4a4a;
+    --background-color: #F5EEE8;
+    --accent-color: #9a8c78;
+    --header-height: 80px;
+    --subtitle-text-color: #343434;
+    --header-bg: rgba(34, 34, 34, 0.95);
+    --border-color: rgba(44, 42, 41, 0.4);
+    --table-header-bg: rgba(44, 42, 41, 0.05);
+    --table-text-color: rgba(44, 42, 41, 0.5);
+    --table-title-text-color: rgba(44, 42, 41, 1);
+    --text-color: rgba(52, 52, 52, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: var(--primary-color);
+    background-color: var(--background-color);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  outline: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
